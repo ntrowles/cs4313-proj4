@@ -7,6 +7,22 @@ public class State {
 	private final double score;
 	private final int numBombs;
 	
+	public ArrayList<Position> getBombPosns() {
+		return bombPosns;
+	}
+
+	public void setBombPosns(ArrayList<Position> bombPosns) {
+		this.bombPosns = bombPosns;
+	}
+
+	public ArrayList<Position> getNonBombPosns() {
+		return nonBombPosns;
+	}
+
+	public void setNonBombPosns(ArrayList<Position> nonBombPosns) {
+		this.nonBombPosns = nonBombPosns;
+	}
+
 	private ArrayList<Position> bombPosns;
 	private ArrayList<Position> nonBombPosns;
 	
@@ -36,15 +52,18 @@ public class State {
 	}
 	
 	public void initializeBoard(int boardSizeY, int boardSizeX){
-		int[][] randomBoard = new int[boardSizeY][boardSizeX];
+		minesweeperBoard = new char[boardSizeY][boardSizeX];
 		for(int i=0; i<numBombs; i++){
-			assignBomb(randomBoard);
+			assignBomb();
 		}
 	}
 	
-	public void assignBomb(int[][] board){
-		int y = board.length;
-		int x = board[0].length;
+	public void assignBomb(){
+		int numNonBombs = nonBombPosns.size();
+		int randPosnIndex = (int)(Math.random() * numNonBombs);
+		Position randPosn = nonBombPosns.get(randPosnIndex);
+		
+		minesweeperBoard[randPosn.getY()][randPosn.getX()] = 'b';
 		
 	}
 	
