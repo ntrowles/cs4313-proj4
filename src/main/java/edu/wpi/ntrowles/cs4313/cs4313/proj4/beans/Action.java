@@ -1,20 +1,14 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
 
 public class Action {
-	private final int x;
-	private final int y;
+	private final Position posn;
 	
-	public Action(int x, int y){
-		this.x = x;
-		this.y = y;
+	public Action(Position posn){
+		this.posn = posn;
 	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
+	
+	public Action(){
+		this(new Position());
 	}
 	
 	

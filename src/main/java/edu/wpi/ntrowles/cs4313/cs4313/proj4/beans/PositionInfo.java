@@ -1,6 +1,15 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
 
 public class PositionInfo {
+	private boolean bomb;
+	public boolean isBomb() {
+		return bomb;
+	}
+
+	public void setBomb(boolean bomb) {
+		this.bomb = bomb;
+	}
+
 	private boolean hidden;
 	private int numNeighbors;
 	private char marker;
@@ -30,10 +39,11 @@ public class PositionInfo {
 	}
 
 	public PositionInfo(){
-		this(true, 0, '0');
+		this(false, true, 0, '0');
 	}
 	
-	public PositionInfo(boolean hidden, int numNeighbors, char marker){
+	public PositionInfo(boolean bomb, boolean hidden, int numNeighbors, char marker){
+		this.bomb = bomb;
 		this.hidden = hidden;
 		this.numNeighbors = numNeighbors;
 		this.marker = marker;
