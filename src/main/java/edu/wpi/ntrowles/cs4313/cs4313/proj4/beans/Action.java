@@ -17,7 +17,9 @@ public class Action {
 		return posn;
 	}
 	
-	
+	public MoveType getMoveType(){
+		return move;
+	}
 	
 	
 }

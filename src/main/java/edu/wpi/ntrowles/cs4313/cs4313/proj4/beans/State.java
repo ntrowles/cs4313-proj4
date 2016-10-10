@@ -95,7 +95,7 @@ public class State {
 	public State nextState(Action a){
 		//Action contains a position
 		//This is the position that will be clicked
-		Position toClick = a.getPosition();
+		Position toClick = agetPosition();
 		
 		//We now change the information of this location
 		int x = toClick.getX();
