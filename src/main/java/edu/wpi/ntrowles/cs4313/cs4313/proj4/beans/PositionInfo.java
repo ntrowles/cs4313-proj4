@@ -1,6 +1,7 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
 
 public class PositionInfo {
+	private Position pos;
 	private boolean bomb;
 	public boolean isBomb() {
 		return bomb;
@@ -36,6 +37,10 @@ public class PositionInfo {
 	public void setMarker(char marker) {
 		this.marker = marker;
 	}
+	
+	public void setPosition(int x, int y){
+		pos = new Position(x, y);
+	}
 
 	/**
 	 * Number of nearby squares that have a bomb
@@ -48,6 +53,10 @@ public class PositionInfo {
 
 	public char getMarker() {
 		return marker;
+	}
+	
+	public Position getPosition(){
+		return pos;
 	}
 
 	public PositionInfo(){

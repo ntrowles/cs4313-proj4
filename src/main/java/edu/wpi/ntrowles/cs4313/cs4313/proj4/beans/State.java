@@ -95,31 +95,63 @@ public class State {
 	public State nextState(Action a){
 		//Action contains a position
 		//This is the position that will be clicked
-		Position toClick = agetPosition();
+		Position toClick = a.getPosition();
 		
 		//We now change the information of this location
 		int x = toClick.getX();
 		int y = toClick.getY();
 		
-		//Now we keep revealing squares in a breadth first fashion
-		//until we encounter squares that have a bomb near them.
-		while(minesweeperBoard[x][y].getNumNeighbors() == 0){
-			minesweeperBoard[x][y].setHidden(false);
+		switch(a.getMoveType()){
 			
-		}
+		case DIG:
+			//State if the kind of move is a dig
+			
+			
+			
+			//dig
+			dig(minesweeperBoard[x][y]);
+			
+			//If its a bomb YOU GOT ISIS'D BITCH!!!!
+			if(this.minesweeperBoard[x][y].isBomb()){
+				//Terminal is true
+			}
+			
+			//else{minesweeperBoard[x][y].
+			//else Square at position becomes revealed, and
+			//possibly many others.
+			break;
 		
-		//If its a bomb YOU GOT ISIS'D BITCH!!!!
-		if(this.minesweeperBoard[x][y].isBomb()){
-			//Terminal is true
+		//State if the kind of move is a flag
+		case FLAG:
+			minesweeperBoard[x][y].setMarker('f');
+			break;
+	
 		}
-		
-		//else{minesweeperBoard[x][y].
-		//else Square at position becomes revealed, and
-		//possibly many others.
 		
 		//Make the next state based on updated information and return
 		State nextState = new State();
 		return nextState;
+	}
+	
+	private void dig(PositionInfo pInfo){
+		int x = pInfo.getPosition().getX();
+		int y = pInfo.getPosition().getY();
+		int length = minesweeperBoard[0].length;
+		
+		//perform dig
+		pInfo.setHidden(false);
+		
+		//perform dig around surrounding positions if current position has no bombs around it
+		if(minesweeperBoard[x][y].getNumNeighbors() == 0){
+			for(int i = -1; i <= 1; i++){
+				for(int j = -1; j <= 1; j++){
+					if(x+i >=0 && y+i >= 0 && x+i < length && y+i < length &&
+							minesweeperBoard[x+i][y+i].isHidden() == true){
+						dig(minesweeperBoard[x+i][y+i]);
+					}
+				}
+			}
+		}
 	}
 
 	public boolean isTerminal() {
