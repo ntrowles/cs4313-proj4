@@ -162,8 +162,6 @@ public class State {
 		
 		//This is right AFTER we change the score in the correct manner.
 		return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
-		
-		//Return a new state that reflects the dug squares all dug up.
 	}
 
 	public boolean isTerminal() {

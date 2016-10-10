@@ -17,8 +17,7 @@ public class Agent {
 	
 	public Action selectAction(State curState){
 		List<Action> validActions = new ArrayList<Action>();
-		//Add all valid actions
-		
+		//Add all valid actions, DIG and FLAG type actions.
 		//select best actions based on function
 		Action bestAction = new Action();
 		return bestAction;
