@@ -105,27 +105,24 @@ public class State {
 		switch(a.getMoveType()){
 			
 		case DIG:
-			//State if the kind of move is a dig
-			
-			
 			
 			//dig
-			dig(minesweeperBoard[x][y]);
+			return dig(minesweeperBoard[x][y]);
 			
-			//If its a bomb YOU GOT ISIS'D BITCH!!!!
-			if(this.minesweeperBoard[x][y].isBomb()){
-				//Terminal is true
-			}
+			/* Why do we have this again?
+			 * 
+			 * 
+			 *else{minesweeperBoard[x][y].
+			 *else Square at position becomes revealed, and
+			 *possibly many others.
+			 */
 			
-			//else{minesweeperBoard[x][y].
-			//else Square at position becomes revealed, and
-			//possibly many others.
-			break;
-		
-		//State if the kind of move is a flag
 		case FLAG:
 			minesweeperBoard[x][y].setMarker('f');
-			break;
+			//Return a new state that reflects the updated marker.
+			//Because the position info was already changed here, 
+			// we just return what is already there.
+			return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
 	
 		}
 		
@@ -134,25 +131,39 @@ public class State {
 		return nextState;
 	}
 	
-	private void dig(PositionInfo pInfo){
+	private State dig(PositionInfo pInfo){
 		int x = pInfo.getPosition().getX();
 		int y = pInfo.getPosition().getY();
 		int length = minesweeperBoard[0].length;
 		
 		//perform dig
+		//Is this where we modify score? (Because nothing hidden must affect the heuristic somehow?)
 		pInfo.setHidden(false);
 		
+		//If its a bomb YOU GOT ISIS'D BITCH!!!!
+		if(this.minesweeperBoard[x][y].isBomb()){
+			//Return a new state with terminal set to true
+			return new State(this.minesweeperBoard, this.score, this.getNumBombs() - 1, true, this.getBombPosns(), this.getNonBombPosns());
+		}
+		
 		//perform dig around surrounding positions if current position has no bombs around it
+		//Modify the score to represent new state ?
 		if(minesweeperBoard[x][y].getNumNeighbors() == 0){
 			for(int i = -1; i <= 1; i++){
 				for(int j = -1; j <= 1; j++){
 					if(x+i >=0 && y+i >= 0 && x+i < length && y+i < length &&
 							minesweeperBoard[x+i][y+i].isHidden() == true){
+						
 						dig(minesweeperBoard[x+i][y+i]);
 					}
 				}
 			}
 		}
+		
+		//This is right AFTER we change the score in the correct manner.
+		return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
+		
+		//Return a new state that reflects the dug squares all dug up.
 	}
 
 	public boolean isTerminal() {
