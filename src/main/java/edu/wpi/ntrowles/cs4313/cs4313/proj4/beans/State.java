@@ -85,7 +85,21 @@ public class State {
 		
 	}
 	
+	/**
+	 * Represents the new state of a board based on an action made.
+	 * @param a The click made to a certain coordinate.
+	 * @return Updated state of the board.
+	 */
 	public State nextState(Action a){
+		//Action contains a position
+		//This is the position that will be clicked
+		
+		//When position clicked
+		    //if bomb then lose
+			//else Square at position becomes revealed, and
+		    //possibly many others.
+		
+		//Make the next state based on updated information and return
 		State nextState = new State();
 		return nextState;
 	}
