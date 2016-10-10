@@ -70,5 +70,23 @@ public class PositionInfo {
 		this.marker = marker;
 	}
 	
+	public String toString(){
+		StringBuilder b = new StringBuilder();
+		if(hidden){
+			b.append("h");
+		} else {
+			b.append(" ");
+		}
+		
+		b.append(marker);
+		
+		if(bomb){
+			b.append("b");
+		} else {
+			b.append(numNeighbors);
+		}
+		
+		return b.toString();
+	}
 	
 }
