@@ -4,36 +4,90 @@ import java.util.ArrayList;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Position;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
 
+/**
+ * Class encoding the state of the board.
+ * @author bgsarkis
+ * @author ntrowles
+ */
 public class State {
-	private final boolean terminal;
 	
+	/**
+	 * Flag determining game end.
+	 */
+	private final boolean terminal;
+	/**
+	 * Board represented by array of PositionInfos.
+	 */
 	private final PositionInfo[][] minesweeperBoard;
+	/**
+	 * Score of the game.
+	 */
 	private final double score;
+	/**
+	 * Number of bombs in this instance of the game.
+	 */
 	private final int numBombs;
 	
+	/**
+	 * Accessor for collection of positions that have bombs in them.
+	 * @return ArrayList of positions that have bombs in them.
+	 */
 	public ArrayList<Position> getBombPosns() {
 		return bombPosns;
 	}
 
+	/**
+	 * Mutator for collection of positions that have bombs in them.
+	 * @param bombPosns The new list of positions which have bombs in them.
+	 */
 	public void setBombPosns(ArrayList<Position> bombPosns) {
 		this.bombPosns = bombPosns;
 	}
 
+	/**
+	 * Accessor for collection of positions that DO NOT have bombs in them.
+	 * @return ArrayList of positions that DO NOT have bombs in them.
+	 */
 	public ArrayList<Position> getNonBombPosns() {
 		return nonBombPosns;
 	}
-
+	
+	/**
+	 * Mutator for collection of positions that DO NOT have bombs in them.
+	 * @param nonBombPosns The new list of positions which do not have bombs in them.
+	 */
 	public void setNonBombPosns(ArrayList<Position> nonBombPosns) {
 		this.nonBombPosns = nonBombPosns;
 	}
 
+	/**
+	 * Collection of positions with bombs.
+	 */
 	private ArrayList<Position> bombPosns;
+	/**
+	 * Collection of positions without bombs.
+	 */
 	private ArrayList<Position> nonBombPosns;
 	
+	/**
+	 * Default State: 
+	 * Has a y size of 10 and an x size of 10.
+	 * The default number of bombs in this state is 10.
+	 * Default score is 0.
+	 * Default terminal flag is false.
+	 */
 	public State(){
 		this(10, 10, 10, 0, false);
 	}
 	
+	/**
+	 * Generalized overloaded state constructor
+	 * @param boardSizeY Horizontal size of board.
+	 * @param boardSizeX Vertical size of board.
+	 * @param numBombs Number of bombs in board.
+	 * @param score Current score.
+	 * @param terminal Current play-end condition.
+	 */
 	public State(int boardSizeY, int boardSizeX, int numBombs, double score, boolean terminal){
 		this.minesweeperBoard = new PositionInfo[boardSizeY][boardSizeX];
 		this.score = score;
@@ -46,6 +100,15 @@ public class State {
 		this.terminal = terminal;
 	}
 	
+	/**
+	 * State constructor with more specific arguments.
+	 * @param board Double array of Position infos, a hardcoded board.
+	 * @param score Current score of the game.
+	 * @param numBombs Number of bombs on the board.
+	 * @param terminal Current play-end condition.
+	 * @param bombPosns Spaces that do have bombs in them.
+	 * @param nonBombPosns Spaces that don't have bombs in them.
+	 */
 	public State(PositionInfo[][] board, double score, int numBombs, boolean terminal, ArrayList<Position> bombPosns, ArrayList<Position> nonBombPosns){
 		this.minesweeperBoard = board;
 		this.score = score;
@@ -53,18 +116,35 @@ public class State {
 		this.terminal = terminal;
 	}
 
+	/**
+	 * Accessor for the physical board.
+	 * @return Double array of position infos representing the board.
+	 */
 	public PositionInfo[][] getMinesweeperBoard() {
 		return minesweeperBoard;
 	}
 	
+	/**
+	 * Accessor for current score.
+	 * @return Score of the game at this state.
+	 */
 	public double getScore() {
 		return this.score;
 	}
 	
+	/**
+	 * Accessor for number of bombs on the board.
+	 * @return Number of bombs on the board
+	 */
 	public int getNumBombs() {
 		return this.numBombs;
 	}
 	
+	/**
+	 * Create a new board, starting off with every space
+	 * having no bomb, then adding them once the board is
+	 * set up.
+	 */
 	public void initializeBoard(){
 		for(int i=0; i<minesweeperBoard.length; i++){
 			for(int j=0; j<minesweeperBoard[0].length; j++){
@@ -77,6 +157,17 @@ public class State {
 		}
 	}
 	
+	/**
+	 * Helper function to drop bombs (but he keeps on forgetting)
+	 * what he wrote down the whole crowd goes spaghetti....
+	 * 
+	 * Helper function to place bombs in random positions on the board
+	 * This is accomplished by randomly selecting a position
+	 * in the list of spaces with no bombs, then placing a bomb
+	 * their. This entails removing said position from the collection
+	 * of non-bomb spaces and adding to the collection fo bomb
+	 * spaces.
+	 */
 	public void assignBomb(){
 		int numNonBombs = nonBombPosns.size();
 		int randPosnIndex = (int)(Math.random() * numNonBombs);
@@ -131,6 +222,14 @@ public class State {
 		return nextState;
 	}
 	
+	/**
+	 * Helper function invoked when a dig action occurs.
+	 * It may cause a chain reaction of revealing squares,
+	 * thus the state is not updated until all squares able to
+	 * be revealed in a grouping are revealed.
+	 * @param pInfo PositionInfo of interest.
+	 * @return The updated state after a dig.
+	 */
 	private State dig(PositionInfo pInfo){
 		int x = pInfo.getPosition().getX();
 		int y = pInfo.getPosition().getY();
@@ -164,10 +263,22 @@ public class State {
 		return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
 	}
 
+	/**
+	 * Accessor for Terminal flag
+	 * @return Current state of terminal flag.
+	 */
 	public boolean isTerminal() {
 		return terminal;
 	}
 	
+	/**
+	 * The board state itself printed out in Stringbuilder format
+	 * Some specifications:
+	 * - Each unit of width is marked by a series of four dashes "----"
+	 * - Each unit of height is a "|" 
+	 * - Together these form boxes that contain a toString of the state of each box.
+	 * This is an oversimplified string representation to facilitate reinforced learning
+	 */
 	public String toString(){
 		StringBuilder b = new StringBuilder();
 		
