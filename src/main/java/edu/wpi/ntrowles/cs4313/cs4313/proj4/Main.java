@@ -17,7 +17,7 @@ public class Main {
 			
 			curState.toString();
 			if(curState.isTerminal()){
-				continuePlaying = 
+				continuePlaying = false;
 			}
 		}
 	}
