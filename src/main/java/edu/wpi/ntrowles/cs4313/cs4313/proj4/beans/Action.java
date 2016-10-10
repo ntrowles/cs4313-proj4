@@ -11,5 +11,9 @@ public class Action {
 		this(new Position());
 	}
 	
+	public Position getPosition(){
+		return posn;
+	}
+	
 	
 }
