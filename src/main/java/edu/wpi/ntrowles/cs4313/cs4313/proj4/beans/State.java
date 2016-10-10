@@ -1,6 +1,8 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
 
 import java.util.ArrayList;
+import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Position;
+import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
 
 public class State {
 	private final boolean terminal;
@@ -93,11 +95,27 @@ public class State {
 	public State nextState(Action a){
 		//Action contains a position
 		//This is the position that will be clicked
+		Position toClick = a.getPosition();
 		
-		//When position clicked
-		    //if bomb then lose
-			//else Square at position becomes revealed, and
-		    //possibly many others.
+		//We now change the information of this location
+		int x = toClick.getX();
+		int y = toClick.getY();
+		
+		//Now we keep revealing squares in a breadth first fashion
+		//until we encounter squares that have a bomb near them.
+		while(minesweeperBoard[x][y].getNumNeighbors() == 0){
+			minesweeperBoard[x][y].setHidden(false);
+			
+		}
+		
+		//If its a bomb YOU GOT ISIS'D BITCH!!!!
+		if(this.minesweeperBoard[x][y].isBomb()){
+			//Terminal is true
+		}
+		
+		//else{minesweeperBoard[x][y].
+		//else Square at position becomes revealed, and
+		//possibly many others.
 		
 		//Make the next state based on updated information and return
 		State nextState = new State();

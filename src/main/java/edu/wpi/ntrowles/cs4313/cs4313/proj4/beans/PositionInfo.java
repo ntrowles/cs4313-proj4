@@ -14,6 +14,9 @@ public class PositionInfo {
 	private int numNeighbors;
 	private char marker;
 	
+	/**
+	 * Determines if square is selected. Everything starts as hidden.
+	 */
 	public boolean isHidden() {
 		return hidden;
 	}
@@ -22,6 +25,10 @@ public class PositionInfo {
 		this.hidden = hidden;
 	}
 
+	/**
+	 * Changes amount of immediately nearby squares that have a bomb
+	 * @param numNeighbors Number of nearby squares that have a bomb.
+	 */
 	public void setNumNeighbors(int numNeighbors) {
 		this.numNeighbors = numNeighbors;
 	}
@@ -30,6 +37,11 @@ public class PositionInfo {
 		this.marker = marker;
 	}
 
+	/**
+	 * Number of nearby squares that have a bomb
+	 * @return Number of nearby bombs.
+	 * 
+	 */
 	public int getNumNeighbors() {
 		return numNeighbors;
 	}
