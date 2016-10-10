@@ -66,6 +66,7 @@ public class State {
 	public void initializeBoard(){
 		for(int i=0; i<minesweeperBoard.length; i++){
 			for(int j=0; j<minesweeperBoard[0].length; j++){
+				minesweeperBoard[i][j] = new PositionInfo();
 				nonBombPosns.add(new Position(j, i));
 			}
 		}
@@ -79,7 +80,7 @@ public class State {
 		int randPosnIndex = (int)(Math.random() * numNonBombs);
 		Position randPosn = nonBombPosns.get(randPosnIndex);
 		
-		minesweeperBoard[randPosn.getY()][randPosn.getX()] = new PositionInfo(true, true, 0, '0');
+		minesweeperBoard[randPosn.getY()][randPosn.getX()].setBomb(true);
 		nonBombPosns.remove(randPosnIndex);
 		bombPosns.add(randPosn);
 		

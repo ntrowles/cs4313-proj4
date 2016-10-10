@@ -8,7 +8,7 @@ public class Agent {
 	private Path curGame;
 	
 	public Agent(){
-		this(new List<Path>);
+		this(new ArrayList<Path>());
 	}
 	
 	public Agent(List<Path> history){
