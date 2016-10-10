@@ -94,4 +94,26 @@ public class State {
 	public boolean isTerminal() {
 		return terminal;
 	}
+	
+	public String toString(){
+		StringBuilder b = new StringBuilder();
+		
+		for(int j=0;j<minesweeperBoard.length;j++){
+			b.append("----");
+		}
+		b.append("\n");
+		for(int i=0;i<minesweeperBoard.length;i++){
+			b.append("|");
+			for(int j=0;j<minesweeperBoard.length;j++){
+				b.append(minesweeperBoard[i][j].toString() + "|");
+			}
+			b.append("\n-");
+			for(int j=0;j<minesweeperBoard.length;j++){
+				b.append("----");
+			}
+			b.append("\n");
+		}
+		
+		return b.toString();
+	}
 }
