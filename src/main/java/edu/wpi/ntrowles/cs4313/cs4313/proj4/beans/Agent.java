@@ -5,6 +5,15 @@ import java.util.List;
 
 public class Agent {
 	private List<Path> history;
+	private Path curGame;
+	
+	public Agent(){
+		this(new List<Path>);
+	}
+	
+	public Agent(List<Path> history){
+		this.history = history;
+	}
 	
 	public Action selectAction(State curState){
 		List<Action> validActions = new ArrayList<Action>();
@@ -16,6 +25,7 @@ public class Agent {
 	}
 	
 	public double doAction(State curState){
-		Action nextAction = 
+		Action nextAction = selectAction(curState);
+		
 	}
 }
