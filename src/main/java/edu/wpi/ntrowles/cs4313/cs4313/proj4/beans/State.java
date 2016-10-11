@@ -8,6 +8,7 @@ import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
  * Class encoding the state of the board.
  * @author bgsarkis
  * @author ntrowles
+ * @author ttrieu
  */
 public class State {
 	
