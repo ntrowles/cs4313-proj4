@@ -264,6 +264,35 @@ public class State {
 	}
 	
 	/**
+	 * Returns the current board stte of the game
+	 * as if it was a player.
+	 * @param curState Active state.
+	 * @return Two - d character array of the board
+	 */
+	public char[][] percieve(){
+		char[][] board = new char[this.minesweeperBoard.length][this.minesweeperBoard[0].length];
+		for(int r = 0; r < board.length; r++){
+			for(int c = 0; c < board[r].length; c++){
+				if(minesweeperBoard[r][c].isHidden()){
+					board[r][c] = 'h';
+				}
+				else if(!minesweeperBoard[r][c].isHidden()){
+					if(minesweeperBoard[r][c].isBomb()){
+						board[r][c] = 'b';
+					}
+					else if(minesweeperBoard[r][c].getNumNeighbors() > 0){
+						board[r][c] = (char)minesweeperBoard[r][c].getNumNeighbors();
+					}
+					else{
+						board[r][c] = 'c';
+					}
+				}
+			}
+		}
+		return board;
+	}
+	
+	/**
 	 * The board state itself printed out in Stringbuilder format
 	 * Some specifications:
 	 * - Each unit of width is marked by a series of four dashes "----"
