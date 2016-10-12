@@ -199,15 +199,9 @@ public class State {
 		case DIG:
 			
 			//dig
-			return dig(minesweeperBoard[x][y]);
+			State newState = dig(minesweeperBoard[x][y]);
 			
-			/* Why do we have this again?
-			 * 
-			 * 
-			 *else{minesweeperBoard[x][y].
-			 *else Square at position becomes revealed, and
-			 *possibly many others.
-			 */
+			return new State(newState.minesweeperBoard, newState.score + 1.0, newState.getNumBombs(), false, newState.getBombPosns(), newState.nonBombPosns);
 			
 		case FLAG:
 			minesweeperBoard[x][y].setMarker('f');
@@ -217,10 +211,7 @@ public class State {
 			return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
 	
 		}
-		
-		//Make the next state based on updated information and return
-		State nextState = new State();
-		return nextState;
+		return new State();
 	}
 	
 	/**
@@ -240,10 +231,10 @@ public class State {
 		//Is this where we modify score? (Because nothing hidden must affect the heuristic somehow?)
 		pInfo.setHidden(false);
 		
-		//If its a bomb YOU GOT ISIS'D BITCH!!!!
+		//Bomb means game end
 		if(this.minesweeperBoard[x][y].isBomb()){
 			//Return a new state with terminal set to true
-			return new State(this.minesweeperBoard, this.score, this.getNumBombs() - 1, true, this.getBombPosns(), this.getNonBombPosns());
+			return new State(this.minesweeperBoard, 0, this.getNumBombs(), true, this.getBombPosns(), this.getNonBombPosns());
 		}
 		
 		//perform dig around surrounding positions if current position has no bombs around it
