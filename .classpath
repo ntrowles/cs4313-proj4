@@ -24,5 +24,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/Minesweeper.jar"/>
+	<classpathentry kind="lib" path="C:/Users/bgsarkis/Documents/Cs2102/CS2102ExampleProject/lib/tester.jar"/>
+	<classpathentry kind="lib" path="C:/Users/bgsarkis/Downloads/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

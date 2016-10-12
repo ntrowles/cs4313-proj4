@@ -8,7 +8,7 @@ import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.State;
 public class StateTest extends TestCase{
 	
 	@Test
-	public void toStringTest(){
+	public static void toStringTest(){
 		State testState = new State();
 		
 		for(int r = 0; r < 10; r++){
