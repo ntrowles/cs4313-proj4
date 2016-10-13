@@ -151,7 +151,7 @@ public class State {
 	public void initializeBoard(){
 		for(int i=0; i<minesweeperBoard.length; i++){
 			for(int j=0; j<minesweeperBoard[0].length; j++){
-				minesweeperBoard[i][j] = new PositionInfo();
+				minesweeperBoard[i][j] = new PositionInfo(j, i);
 				nonBombPosns.add(new Position(j, i));
 			}
 		}
@@ -163,6 +163,8 @@ public class State {
 	/**
 	 * Helper function to drop bombs (but he keeps on forgetting)
 	 * what he wrote down the whole crowd goes spaghetti....
+	 * 
+	 * ^^Sarkis I swear...
 	 * 
 	 * Helper function to place bombs in random positions on the board
 	 * This is accomplished by randomly selecting a position
@@ -191,7 +193,7 @@ public class State {
 			}
 		}
 		
-		System.out.println(toString());
+//		System.out.println(toString());
 		
 	}
 	

@@ -109,7 +109,11 @@ public class PositionInfo {
 	 * marker on the space.
 	 */
 	public PositionInfo(){
-		this(false, true, 0, '0');
+		this(false, true, 0, '0', 0, 0);
+	}
+	
+	public PositionInfo(int x, int y){
+		this(false, true, 0, '0', x, y);
 	}
 	
 	/**
@@ -120,10 +124,16 @@ public class PositionInfo {
 	 * @param marker Is this space labaled dangerous?
 	 */
 	public PositionInfo(boolean bomb, boolean hidden, int numNeighbors, char marker){
+		this(bomb, hidden, numNeighbors, marker, 0, 0);
+	}
+	
+	public PositionInfo(boolean bomb, boolean hidden, int numNeighbors, char marker, int x, int y){
+		
 		this.bomb = bomb;
 		this.hidden = hidden;
 		this.numNeighbors = numNeighbors;
 		this.marker = marker;
+		this.pos = new Position(x, y);
 	}
 	
 	/**
