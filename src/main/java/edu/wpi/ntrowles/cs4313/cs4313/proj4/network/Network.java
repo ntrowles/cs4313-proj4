@@ -53,6 +53,7 @@ public class Network {
 		this.numNeurons = numNeurons;
 		this.randRange = 50;
 		this.Thetas = initializeThetas();
+		alpha = 0.05;
 
 	}
 	
@@ -88,7 +89,7 @@ public class Network {
 	}
 	
 	public double activationFn(double input){
-		return 1.0/(1.0+Math.exp(input));
+		return 1.0/(1.0+Math.exp(-input));
 	}
 	
 	public Matrix activationFn(Matrix input){
@@ -96,10 +97,36 @@ public class Network {
 		Matrix expInput = new Matrix(input.getRowDimension(), input.getColumnDimension());
 		for(int i=0; i<input.getRowDimension(); i++){
 			for(int j=0; j<input.getColumnDimension(); j++){
-				expInput.set(i, j, Math.exp(input.get(i, j)));
+				expInput.set(i, j, Math.exp(-1*(input.get(i, j))));
+//				System.out.print(Math.exp(-1*(input.get(i,j))) + ",");
 			}
 		}
-		return onesMatrix.arrayLeftDivide(onesMatrix.plus(expInput));
+//		System.out.println();
+		Matrix onesMatrixPlusExpInput = onesMatrix.plus(expInput);
+		for(int i=0; i<input.getRowDimension(); i++){
+			for(int j=0; j<input.getColumnDimension(); j++){
+//				System.out.print(onesMatrix.get(i,j) + ",");
+			}
+		}
+//		System.out.println();
+		
+		for(int i=0; i<input.getRowDimension(); i++){
+			for(int j=0; j<input.getColumnDimension(); j++){
+//				System.out.print(onesMatrixPlusExpInput.get(i,j) + ",");
+			}
+		}
+//		System.out.println();
+		
+		Matrix finalMatrix = onesMatrix.arrayRightDivide(onesMatrixPlusExpInput).copy();
+		
+		for(int i=0; i<input.getRowDimension(); i++){
+			for(int j=0; j<input.getColumnDimension(); j++){
+//				System.out.print(finalMatrix.get(i,j) + ",");
+			}
+		}
+//		System.out.println();
+		
+		return finalMatrix;
 		
 	}
 	
@@ -114,12 +141,15 @@ public class Network {
 		for(int i=0; i<xVectors.size(); i++){
 			ArrayList<Matrix> aList = forwardPropogate(xVectors.get(i));
 			ArrayList<Matrix> dList = new ArrayList<Matrix>(numLayers);
+			for(int j=0; j<numLayers; j++){
+				dList.add(null);
+			}
 			Matrix dOutput = aList.get(aList.size()-1).minus(yVectors.get(i));
 			dList.set(numLayers-1, dOutput);
 			
 			for (int j=aList.size()-2; j>0; j--){
-				Matrix onesMatrix = new Matrix(aList.get(i).getRowDimension(), aList.get(i).getColumnDimension(), 1.0);
-				Matrix dCur = Thetas.get(j).transpose().times(dList.get(j+1)).arrayTimes(aList.get(i)).arrayTimes(onesMatrix.minus(aList.get(i)));
+				Matrix onesMatrix = new Matrix(aList.get(j).getRowDimension(), aList.get(j).getColumnDimension(), 1.0);
+				Matrix dCur = Thetas.get(j).transpose().times(dList.get(j+1)).arrayTimes(aList.get(j)).arrayTimes(onesMatrix.minus(aList.get(j)));
 				dList.set(j, dCur);
 			}
 			
@@ -149,6 +179,13 @@ public class Network {
 		
 		for(int i=1; i<numLayers; i++){
 			Matrix acurVector = activationFn(Thetas.get(i-1).times(aList.get(i-1)));
+			
+			StringBuilder b = new StringBuilder();
+			for(int j=0; j<acurVector.getRowDimension(); j++){
+//				b.append(acurVector.get(j, 0));
+//				b.append(",");
+			}
+//			System.out.println(b.toString());
 			aList.add(acurVector);
 		}
 		
