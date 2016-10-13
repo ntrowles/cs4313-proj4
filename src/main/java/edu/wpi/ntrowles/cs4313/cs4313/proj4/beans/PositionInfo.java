@@ -162,4 +162,8 @@ public class PositionInfo {
 		return b.toString();
 	}
 	
+	public PositionInfo copy(){
+		return new PositionInfo(this.bomb, this.hidden, this.numNeighbors, this.marker, this.pos.getX(), this.pos.getY());
+	}
+	
 }

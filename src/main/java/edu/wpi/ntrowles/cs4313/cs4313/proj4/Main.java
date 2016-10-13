@@ -16,11 +16,14 @@ public class Main {
 //		curState.initializeBoard();
 		curState.toString();
 		while(continuePlaying){
-			a.doAction(curState);
-			
-			curState.nextState(new Action(new Position((int)(Math.random()*curState.getMinesweeperBoard().length), (int)(Math.random()*curState.getMinesweeperBoard()[0].length)), MoveType.DIG));
-			
+			//a.doAction(curState);
 			System.out.println(curState.toString());
+			Action action = new Action(new Position((int)(Math.random()*curState.getMinesweeperBoard().length), (int)(Math.random()*curState.getMinesweeperBoard()[0].length)), MoveType.DIG);
+			System.out.println("x: " + action.getPosition().getX() + ", y: " + action.getPosition().getY());
+			State nextState = curState.nextState(action);
+			//a.updateHistory(curState, nextState, action);
+			curState = nextState;
+			
 			if(curState.isTerminal()){
 				continuePlaying = false;
 			}
