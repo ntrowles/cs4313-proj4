@@ -51,6 +51,9 @@ public class Network {
 		numNeurons.add(9);
 		numNeurons.add(1);
 		this.numNeurons = numNeurons;
+		this.randRange = 50;
+		this.Thetas = initializeThetas();
+
 	}
 	
 	public Network(int numLayers, ArrayList<Integer> numNeurons){
@@ -70,10 +73,12 @@ public class Network {
 	public ArrayList<Matrix> initializeThetas(){
 		ArrayList<Matrix> thetas = new ArrayList<Matrix>();
 		for(int i=0; i<numLayers-1; i++){
+//			Matrix curTheta = Matrix.random(numNeurons.get(i+1), numNeurons.get(i));
 			Matrix curTheta = new Matrix(numNeurons.get(i+1), numNeurons.get(i));
 			for(int j=0; j<curTheta.getRowDimension(); j++){
 				for(int k=0; k<curTheta.getColumnDimension(); k++){
-					curTheta.set(j, k, (Math.random()*(2*randRange) - randRange));
+					double random = Math.random()*2.0*randRange - randRange;
+					curTheta.set(j, k, random);
 				}
 			}
 			thetas.add(curTheta);
@@ -142,7 +147,7 @@ public class Network {
 		Matrix a0Vector = xVector.copy();
 		aList.add(a0Vector);
 		
-		for(int i=1; i<=numLayers; i++){
+		for(int i=1; i<numLayers; i++){
 			Matrix acurVector = activationFn(Thetas.get(i-1).times(aList.get(i-1)));
 			aList.add(acurVector);
 		}

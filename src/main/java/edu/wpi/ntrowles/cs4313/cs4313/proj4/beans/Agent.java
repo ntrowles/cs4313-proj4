@@ -57,12 +57,13 @@ public class Agent {
 			for(int j=0; j<percievedState[0].length; j++){
 				if(percievedState[i][j] == 'h'){
 					Action curAction = new Action(new Position(j, i), MoveType.DIG);
-					Matrix xVector = new Matrix(24, 1);
+					Matrix xVector = assignXVector(curAction, percievedState);
 					double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
 					if(!baInitialized){
 						bestAction = curAction;
 						//Matrix yVector = new Matrix(1, 1);
 						bestActionH = curActionH;
+						baInitialized = true;
 					} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
 						bestAction = curAction;
 						bestActionH = curActionH;
@@ -79,6 +80,39 @@ public class Agent {
 		for(int i=0; i<iterations; i++){
 			neuralNetwork.gradientDescent(xVectors, yVectors);
 		}
+	}
+	
+	public Matrix assignXVector(Action action, char[][] percievedState){
+		Matrix xVector = new Matrix(24,1);
+		int xPosn = action.getPosition().getX();
+		int yPosn = action.getPosition().getY();
+		
+		int count = 0;
+		for(int i=-2; i<=2; i++){
+			for(int j=-2; j<=2; j++){
+				int curXPosn = xPosn + j;
+				int curYPosn = yPosn + i;
+				
+				if(i==0 && j==0){
+					continue;
+				}
+				
+				if(curXPosn < 0 | curYPosn < 0 | curXPosn >= percievedState[0].length | curYPosn <= percievedState.length){
+					xVector.set(count, 0, -2.0);
+				} else if(percievedState[curYPosn][curXPosn] == 'h' || percievedState[curYPosn][curXPosn] == 'f'){
+					xVector.set(count, 0, -1.0);
+				} else if(percievedState[curYPosn][curXPosn] >= '0' && percievedState[curYPosn][curXPosn] <= '9'){
+					String s = "" + percievedState[i][j];
+					xVector.set(count, 0, Double.parseDouble(s));
+				} else{
+					xVector.set(count, 1 , -1);
+				}
+				
+				count++;
+			}
+		}
+		
+		return xVector;
 	}
 	
 }
