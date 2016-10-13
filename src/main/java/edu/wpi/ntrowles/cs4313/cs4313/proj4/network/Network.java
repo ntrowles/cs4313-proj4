@@ -98,11 +98,35 @@ public class Network {
 		for(int i=0; i<input.getRowDimension(); i++){
 			for(int j=0; j<input.getColumnDimension(); j++){
 				expInput.set(i, j, Math.exp(-1*(input.get(i, j))));
-				System.out.print(Math.exp(-1*(input.get(i,j))) + ",");
+//				System.out.print(Math.exp(-1*(input.get(i,j))) + ",");
 			}
 		}
-		System.out.println();
-		return onesMatrix.arrayLeftDivide(onesMatrix.plus(expInput));
+//		System.out.println();
+		Matrix onesMatrixPlusExpInput = onesMatrix.plus(expInput);
+		for(int i=0; i<input.getRowDimension(); i++){
+			for(int j=0; j<input.getColumnDimension(); j++){
+//				System.out.print(onesMatrix.get(i,j) + ",");
+			}
+		}
+//		System.out.println();
+		
+		for(int i=0; i<input.getRowDimension(); i++){
+			for(int j=0; j<input.getColumnDimension(); j++){
+//				System.out.print(onesMatrixPlusExpInput.get(i,j) + ",");
+			}
+		}
+//		System.out.println();
+		
+		Matrix finalMatrix = onesMatrix.arrayRightDivide(onesMatrixPlusExpInput).copy();
+		
+		for(int i=0; i<input.getRowDimension(); i++){
+			for(int j=0; j<input.getColumnDimension(); j++){
+//				System.out.print(finalMatrix.get(i,j) + ",");
+			}
+		}
+//		System.out.println();
+		
+		return finalMatrix;
 		
 	}
 	
@@ -158,10 +182,10 @@ public class Network {
 			
 			StringBuilder b = new StringBuilder();
 			for(int j=0; j<acurVector.getRowDimension(); j++){
-				b.append(acurVector.get(j, 0));
-				b.append(",");
+//				b.append(acurVector.get(j, 0));
+//				b.append(",");
 			}
-			System.out.println(b.toString());
+//			System.out.println(b.toString());
 			aList.add(acurVector);
 		}
 		
