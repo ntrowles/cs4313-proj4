@@ -97,7 +97,7 @@ public class Agent {
 					continue;
 				}
 				
-				if(curXPosn < 0 | curYPosn < 0 | curXPosn >= percievedState[0].length | curYPosn <= percievedState.length){
+				if(curXPosn < 0 | curYPosn < 0 | curXPosn >= percievedState[0].length | curYPosn >= percievedState.length){
 					xVector.set(count, 0, -2.0);
 				} else if(percievedState[curYPosn][curXPosn] == 'h' || percievedState[curYPosn][curXPosn] == 'f'){
 					xVector.set(count, 0, -1.0);
@@ -105,7 +105,7 @@ public class Agent {
 					String s = "" + percievedState[curYPosn][curXPosn];
 					xVector.set(count, 0, Double.parseDouble(s));
 				} else{
-					xVector.set(count, 1 , -1);
+					xVector.set(count, 0 , -1);
 				}
 				
 				count++;
