@@ -75,7 +75,7 @@ public class Agent {
 	
 	public void train(int iterations){
 		for(int i=0; i<iterations; i++){
-			neuralNetwork.gradientDescent();
+			neuralNetwork.gradientDescent(xVectors, yVectors);
 		}
 	}
 	
