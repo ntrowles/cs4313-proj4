@@ -28,6 +28,15 @@ public class State {
 	 * Number of bombs in this instance of the game.
 	 */
 	private final int numBombs;
+
+	/**
+	 * Collection of positions with bombs.
+	 */
+	private ArrayList<Position> bombPosns;
+	/**
+	 * Collection of positions without bombs.
+	 */
+	private ArrayList<Position> nonBombPosns;
 	
 	/**
 	 * Accessor for collection of positions that have bombs in them.
@@ -60,15 +69,6 @@ public class State {
 	public void setNonBombPosns(ArrayList<Position> nonBombPosns) {
 		this.nonBombPosns = nonBombPosns;
 	}
-
-	/**
-	 * Collection of positions with bombs.
-	 */
-	private ArrayList<Position> bombPosns;
-	/**
-	 * Collection of positions without bombs.
-	 */
-	private ArrayList<Position> nonBombPosns;
 	
 	/**
 	 * Default State: 
