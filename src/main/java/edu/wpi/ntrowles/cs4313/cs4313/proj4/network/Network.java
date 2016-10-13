@@ -9,9 +9,51 @@ public class Network {
 	double randRange;
 	ArrayList<Integer> numNeurons; // number of neurons at each layer
 	ArrayList<Matrix> Thetas; // weights between each layer
+	double alpha; //learning rate
 	
+	public int getNumLayers() {
+		return numLayers;
+	}
+
+	public void setNumLayers(int numLayers) {
+		this.numLayers = numLayers;
+	}
+
+	public double getRandRange() {
+		return randRange;
+	}
+
+	public void setRandRange(double randRange) {
+		this.randRange = randRange;
+	}
+
+	public ArrayList<Integer> getNumNeurons() {
+		return numNeurons;
+	}
+
+	public void setNumNeurons(ArrayList<Integer> numNeurons) {
+		this.numNeurons = numNeurons;
+	}
+
+	public ArrayList<Matrix> getThetas() {
+		return Thetas;
+	}
+
+	public void setThetas(ArrayList<Matrix> thetas) {
+		Thetas = thetas;
+	}
+
 	public Network(){
-		this(3, new ArrayList<Integer>(), new ArrayList<Matrix>());
+		this.numLayers = 4;
+		ArrayList<Integer> numNeurons = new ArrayList<Integer>();
+		numNeurons.add(24);
+		numNeurons.add(9);
+		numNeurons.add(9);
+		numNeurons.add(1);
+		this.numNeurons = numNeurons;
+		this.randRange = 50;
+		this.Thetas = initializeThetas();
+
 	}
 	
 	public Network(int numLayers, ArrayList<Integer> numNeurons){
@@ -30,11 +72,13 @@ public class Network {
 	
 	public ArrayList<Matrix> initializeThetas(){
 		ArrayList<Matrix> thetas = new ArrayList<Matrix>();
-		for(int i=0; i<numNeurons.size()-1; i++){
+		for(int i=0; i<numLayers-1; i++){
+//			Matrix curTheta = Matrix.random(numNeurons.get(i+1), numNeurons.get(i));
 			Matrix curTheta = new Matrix(numNeurons.get(i+1), numNeurons.get(i));
 			for(int j=0; j<curTheta.getRowDimension(); j++){
 				for(int k=0; k<curTheta.getColumnDimension(); k++){
-					curTheta.set(j, k, (Math.random()*(2*randRange) - randRange));
+					double random = Math.random()*2.0*randRange - randRange;
+					curTheta.set(j, k, random);
 				}
 			}
 			thetas.add(curTheta);
@@ -68,7 +112,7 @@ public class Network {
 		}
 		
 		for(int i=0; i<xVectors.size(); i++){
-			ArrayList<Matrix> aList = forwardPropogate(xVectors.get(i), yVectors.get(i));
+			ArrayList<Matrix> aList = forwardPropogate(xVectors.get(i));
 			ArrayList<Matrix> dList = new ArrayList<Matrix>(numLayers);
 			Matrix dOutput = aList.get(aList.size()-1).minus(yVectors.get(i));
 			dList.set(numLayers-1, dOutput);
@@ -96,14 +140,14 @@ public class Network {
 		
 	}
 	
-	public ArrayList<Matrix> forwardPropogate(Matrix xVector, Matrix yVector){
+	public ArrayList<Matrix> forwardPropogate(Matrix xVector){
 		ArrayList<Matrix> aList = new ArrayList<Matrix>();
 		ArrayList<Matrix> zList = new ArrayList<Matrix>();
 		
 		Matrix a0Vector = xVector.copy();
 		aList.add(a0Vector);
 		
-		for(int i=1; i<=numLayers; i++){
+		for(int i=1; i<numLayers; i++){
 			Matrix acurVector = activationFn(Thetas.get(i-1).times(aList.get(i-1)));
 			aList.add(acurVector);
 		}
@@ -113,5 +157,13 @@ public class Network {
 //		}
 		
 		return aList;
+	}
+	
+	public void gradientDescent(ArrayList<Matrix> xVectors, ArrayList<Matrix> yVectors){
+		ArrayList<Matrix> DeltaList = backPropagate(xVectors, yVectors);
+		for(int i=0; i<Thetas.size(); i++){
+			Matrix curTheta = Thetas.get(i);
+			Thetas.set(i, curTheta.minus(DeltaList.get(i).times(alpha)));
+		}
 	}
 }
