@@ -93,10 +93,12 @@ public class State {
 		this.minesweeperBoard = new PositionInfo[boardSizeY][boardSizeX];
 		this.score = score;
 		this.numBombs = numBombs;
-		initializeBoard();
+		
 		
 		this.bombPosns = new ArrayList<Position>();
 		this.nonBombPosns = new ArrayList<Position>();
+		
+		initializeBoard();
 		
 		this.terminal = terminal;
 	}

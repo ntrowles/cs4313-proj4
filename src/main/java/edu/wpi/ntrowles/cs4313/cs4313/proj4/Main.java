@@ -10,12 +10,12 @@ public class Main {
 		
 		Agent a = new Agent();
 		State curState = new State();
-		curState.initializeBoard();
+//		curState.initializeBoard();
 		curState.toString();
 		while(continuePlaying){
 			a.doAction(curState);
 			
-			curState.toString();
+			System.out.println(curState.toString());
 			if(curState.isTerminal()){
 				continuePlaying = false;
 			}
