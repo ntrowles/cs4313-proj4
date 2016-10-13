@@ -115,4 +115,10 @@ public class Agent {
 		return xVector;
 	}
 	
+	public void updateHistory(Action action, State newState){
+		//TODO update percieved state/path thing (not really that high a priority, maybe if we want it for another agent algo)
+		
+		//TODO update training set pairs
+	}
+	
 }

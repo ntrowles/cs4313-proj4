@@ -319,7 +319,7 @@ public class State {
 						board[r][c] = 'b';
 					}
 					else if(minesweeperBoard[r][c].getNumNeighbors() > 0){
-						board[r][c] = (char)minesweeperBoard[r][c].getNumNeighbors();
+						board[r][c] = (char) (minesweeperBoard[r][c].getNumNeighbors() + 48); //Add ascii value of 48: http://stackoverflow.com/questions/17984975/convert-int-to-char-in-java
 					}
 					else{
 						board[r][c] = 'c';
