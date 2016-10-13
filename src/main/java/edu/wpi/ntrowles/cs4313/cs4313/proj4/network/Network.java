@@ -6,30 +6,112 @@ import Jama.Matrix;
 
 public class Network {
 	int numLayers; //number of layers in network (input + hidden + output)
+	double randRange;
 	ArrayList<Integer> numNeurons; // number of neurons at each layer
-	ArrayList<Matrix> thetas; // weights between each layer
+	ArrayList<Matrix> Thetas; // weights between each layer
+	
+	public Network(){
+		this(3, new ArrayList<Integer>(), new ArrayList<Matrix>());
+	}
+	
+	public Network(int numLayers, ArrayList<Integer> numNeurons){
+		this.numLayers = numLayers;
+		this.numNeurons = numNeurons;
+		this.Thetas = initializeThetas();
+		this.randRange = 50;
+	}
+	
+	public Network(int numLayers, ArrayList<Integer> numNeurons, ArrayList<Matrix> initialThetas){
+		this.numLayers = numLayers;
+		this.numNeurons = numNeurons;
+		this.Thetas = initialThetas;
+		this.randRange = 50;
+	}
+	
+	public ArrayList<Matrix> initializeThetas(){
+		ArrayList<Matrix> thetas = new ArrayList<Matrix>();
+		for(int i=0; i<numNeurons.size()-1; i++){
+			Matrix curTheta = new Matrix(numNeurons.get(i+1), numNeurons.get(i));
+			for(int j=0; j<curTheta.getRowDimension(); j++){
+				for(int k=0; k<curTheta.getColumnDimension(); k++){
+					curTheta.set(j, k, (Math.random()*(2*randRange) - randRange));
+				}
+			}
+			thetas.add(curTheta);
+		}
+		
+		return thetas;
+	}
 	
 	public double activationFn(double input){
 		return 1.0/(1.0+Math.exp(input));
 	}
 	
-	public double[][] backPropagate(ArrayList<double[]> x, ArrayList<Double> y){
-		Matrix Delta = new Matrix();
+	public Matrix activationFn(Matrix input){
+		Matrix onesMatrix = new Matrix(input.getRowDimension(), input.getColumnDimension(), 1.0);
+		Matrix expInput = new Matrix(input.getRowDimension(), input.getColumnDimension());
+		for(int i=0; i<input.getRowDimension(); i++){
+			for(int j=0; j<input.getColumnDimension(); j++){
+				expInput.set(i, j, Math.exp(input.get(i, j)));
+			}
+		}
+		return onesMatrix.arrayLeftDivide(onesMatrix.plus(expInput));
 		
 	}
 	
-	public ArrayList<double[]> forwardPropogate(double[] x, double y){
-		ArrayList<double[]> a = new ArrayList<double[]>();
-		double[] z = new double[numLayers];
-		double[] a0 = new double[x.length];
-		for(int i=0; i<x.length; i++){
-			a0[i] = x[i];
+	public ArrayList<Matrix> backPropagate(ArrayList<Matrix> xVectors, ArrayList<Matrix> yVectors){
+		ArrayList<Matrix> DeltaList = new ArrayList<Matrix>();
+		
+		for(int i=0; i<numNeurons.size()-1; i++){
+			Matrix curDelta = new Matrix(numNeurons.get(i+1), numNeurons.get(i));
+			DeltaList.add(curDelta);
 		}
 		
-		for(int i=1; i<numLayers; i++){
+		for(int i=0; i<xVectors.size(); i++){
+			ArrayList<Matrix> aList = forwardPropogate(xVectors.get(i), yVectors.get(i));
+			ArrayList<Matrix> dList = new ArrayList<Matrix>(numLayers);
+			Matrix dOutput = aList.get(aList.size()-1).minus(yVectors.get(i));
+			dList.set(numLayers-1, dOutput);
+			
+			for (int j=aList.size()-2; j>0; j--){
+				Matrix onesMatrix = new Matrix(aList.get(i).getRowDimension(), aList.get(i).getColumnDimension(), 1.0);
+				Matrix dCur = Thetas.get(j).transpose().times(dList.get(j+1)).arrayTimes(aList.get(i)).arrayTimes(onesMatrix.minus(aList.get(i)));
+				dList.set(j, dCur);
+			}
+			
+			for (int j=0; j<DeltaList.size(); j++){
+				Matrix curDelta = DeltaList.get(j);
+				DeltaList.set(j, curDelta.plus(dList.get(j+1).times(aList.get(j).transpose())));
+			}
 			
 		}
 		
-		return a;
+		ArrayList<Matrix> partialDerivatives = new ArrayList<Matrix>();
+		for(int i=0; i<DeltaList.size(); i++){
+			Matrix partialDerivative = DeltaList.get(i).times(1.0/xVectors.size());
+			partialDerivatives.add(partialDerivative);
+		}
+		
+		return partialDerivatives;
+		
+	}
+	
+	public ArrayList<Matrix> forwardPropogate(Matrix xVector, Matrix yVector){
+		ArrayList<Matrix> aList = new ArrayList<Matrix>();
+		ArrayList<Matrix> zList = new ArrayList<Matrix>();
+		
+		Matrix a0Vector = xVector.copy();
+		aList.add(a0Vector);
+		
+		for(int i=1; i<=numLayers; i++){
+			Matrix acurVector = activationFn(Thetas.get(i-1).times(aList.get(i-1)));
+			aList.add(acurVector);
+		}
+		
+//		for(int i=1; i<numLayers; i++){
+//			
+//		}
+		
+		return aList;
 	}
 }
