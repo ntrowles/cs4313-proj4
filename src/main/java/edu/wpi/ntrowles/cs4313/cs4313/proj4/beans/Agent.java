@@ -47,6 +47,8 @@ public class Agent {
 	}
 	
 	public Action selectAction(State curState){
+		System.out.println("Selecting action");
+		
 		char[][] percievedState = curState.percieve();
 		
 		List<Action> validActions = new ArrayList<Action>();
@@ -59,8 +61,10 @@ public class Agent {
 			for(int j=0; j<percievedState[0].length; j++){
 				if(percievedState[i][j] == 'h'){
 					Action curAction = new Action(new Position(j, i), MoveType.DIG);
+					System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
 					Matrix xVector = assignXVector(curAction, percievedState);
 					double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+					System.out.println("Resulting hypothesis: " + curActionH);
 					if(!baInitialized){
 						bestAction = curAction;
 						//Matrix yVector = new Matrix(1, 1);

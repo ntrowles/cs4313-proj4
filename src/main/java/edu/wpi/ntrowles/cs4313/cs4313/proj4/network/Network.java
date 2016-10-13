@@ -97,9 +97,11 @@ public class Network {
 		Matrix expInput = new Matrix(input.getRowDimension(), input.getColumnDimension());
 		for(int i=0; i<input.getRowDimension(); i++){
 			for(int j=0; j<input.getColumnDimension(); j++){
-				expInput.set(i, j, Math.exp(-input.get(i, j)));
+				expInput.set(i, j, Math.exp(-1*(input.get(i, j))));
+				System.out.print(Math.exp(-1*(input.get(i,j))) + ",");
 			}
 		}
+		System.out.println();
 		return onesMatrix.arrayLeftDivide(onesMatrix.plus(expInput));
 		
 	}
@@ -153,6 +155,13 @@ public class Network {
 		
 		for(int i=1; i<numLayers; i++){
 			Matrix acurVector = activationFn(Thetas.get(i-1).times(aList.get(i-1)));
+			
+			StringBuilder b = new StringBuilder();
+			for(int j=0; j<acurVector.getRowDimension(); j++){
+				b.append(acurVector.get(j, 0));
+				b.append(",");
+			}
+			System.out.println(b.toString());
 			aList.add(acurVector);
 		}
 		

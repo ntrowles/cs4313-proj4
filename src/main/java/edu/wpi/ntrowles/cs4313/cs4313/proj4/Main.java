@@ -102,9 +102,9 @@ public class Main {
 			if(numGames % 50 == 0 && newGame){
 				gameScoreSet.add(curGameScores);
 				curGameScores = new double[50];
-				agent.train(100);
+				agent.train(20);
 				//continuePlaying = false;
-			} else if(numGames == 5000){
+			} else if(numGames == 2500){
 				continuePlaying = false;
 			}
 		}
