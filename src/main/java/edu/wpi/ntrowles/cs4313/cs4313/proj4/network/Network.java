@@ -10,6 +10,38 @@ public class Network {
 	ArrayList<Integer> numNeurons; // number of neurons at each layer
 	ArrayList<Matrix> Thetas; // weights between each layer
 	
+	public int getNumLayers() {
+		return numLayers;
+	}
+
+	public void setNumLayers(int numLayers) {
+		this.numLayers = numLayers;
+	}
+
+	public double getRandRange() {
+		return randRange;
+	}
+
+	public void setRandRange(double randRange) {
+		this.randRange = randRange;
+	}
+
+	public ArrayList<Integer> getNumNeurons() {
+		return numNeurons;
+	}
+
+	public void setNumNeurons(ArrayList<Integer> numNeurons) {
+		this.numNeurons = numNeurons;
+	}
+
+	public ArrayList<Matrix> getThetas() {
+		return Thetas;
+	}
+
+	public void setThetas(ArrayList<Matrix> thetas) {
+		Thetas = thetas;
+	}
+
 	public Network(){
 		this(3, new ArrayList<Integer>(), new ArrayList<Matrix>());
 	}
@@ -96,7 +128,7 @@ public class Network {
 		
 	}
 	
-	public ArrayList<Matrix> forwardPropogate(Matrix xVector, Matrix yVector){
+	public ArrayList<Matrix> forwardPropogate(Matrix xVector){
 		ArrayList<Matrix> aList = new ArrayList<Matrix>();
 		ArrayList<Matrix> zList = new ArrayList<Matrix>();
 		
