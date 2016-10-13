@@ -3,6 +3,8 @@ package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.ntrowles.cs4313.cs4313.proj4.network.Network;
+
 /**
  * The core tester class of our project.
  * The agent is the AI that plays the game.
@@ -10,6 +12,9 @@ import java.util.List;
  *
  */
 public class Agent {
+	private Network neuralNetwork = new Network();
+	
+	
 	/**
 	 * Contains a list of paths of past games, the memory of the agent.
 	 */
@@ -46,5 +51,6 @@ public class Agent {
 	public double doAction(State curState){
 		Action nextAction = selectAction(curState);
 		
+		return 0;
 	}
 }

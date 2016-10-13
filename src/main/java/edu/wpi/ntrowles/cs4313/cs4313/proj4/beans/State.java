@@ -28,6 +28,15 @@ public class State {
 	 * Number of bombs in this instance of the game.
 	 */
 	private final int numBombs;
+
+	/**
+	 * Collection of positions with bombs.
+	 */
+	private ArrayList<Position> bombPosns;
+	/**
+	 * Collection of positions without bombs.
+	 */
+	private ArrayList<Position> nonBombPosns;
 	
 	/**
 	 * Accessor for collection of positions that have bombs in them.
@@ -60,15 +69,6 @@ public class State {
 	public void setNonBombPosns(ArrayList<Position> nonBombPosns) {
 		this.nonBombPosns = nonBombPosns;
 	}
-
-	/**
-	 * Collection of positions with bombs.
-	 */
-	private ArrayList<Position> bombPosns;
-	/**
-	 * Collection of positions without bombs.
-	 */
-	private ArrayList<Position> nonBombPosns;
 	
 	/**
 	 * Default State: 
@@ -93,10 +93,12 @@ public class State {
 		this.minesweeperBoard = new PositionInfo[boardSizeY][boardSizeX];
 		this.score = score;
 		this.numBombs = numBombs;
-		initializeBoard();
 		
 		this.bombPosns = new ArrayList<Position>();
 		this.nonBombPosns = new ArrayList<Position>();
+		initializeBoard();
+		
+		initializeBoard();
 		
 		this.terminal = terminal;
 	}
@@ -177,6 +179,19 @@ public class State {
 		minesweeperBoard[randPosn.getY()][randPosn.getX()].setBomb(true);
 		nonBombPosns.remove(randPosnIndex);
 		bombPosns.add(randPosn);
+		int y = randPosn.getY();
+		int x = randPosn.getX();
+		
+		for(int i = -1; i <= 1; i++){
+			for(int j = -1; j <= 1; j++){
+				if(!(i == 0 && j == 0) && x+j >=0 && y+i >= 0 && x+j < minesweeperBoard[0].length && y+i < minesweeperBoard.length){
+					minesweeperBoard[randPosn.getY() + i][randPosn.getX() + j]
+						.setNumNeighbors(minesweeperBoard[randPosn.getY()+i][randPosn.getX()+j].getNumNeighbors() + 1);
+				}
+			}
+		}
+		
+		System.out.println(toString());
 		
 	}
 	
@@ -261,7 +276,7 @@ public class State {
 		}
 		
 		//This is right AFTER we change the score in the correct manner.
-		return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
+		return new State(this.minesweeperBoard, this.score + 1.0, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
 	}
 
 	/**
