@@ -29,18 +29,7 @@ public class StateTest extends State {
 		//this.testState.initializeBoard();
 	}
 	
-//	public void toStringTest(){
-//
-//		
-//
-//		for(int r = 0; r < 10; r++){
-//			for(int c = 0; c < 10; c++){
-//				assertTrue(testState.percieve()[r][c] == 'h');
-//			}
-//			
-//		}
-//
-//	}
+
 	
 	@Test
 	public void getNumBombsTest(){
