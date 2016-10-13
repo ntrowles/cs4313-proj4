@@ -1,8 +1,8 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4;
 
-import org.junit.Assert.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
-import junit.framework.TestCase;
+import junit.framework.*;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.State;
 
 public class StateTest extends TestCase{
