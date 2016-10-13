@@ -13,7 +13,7 @@ import edu.wpi.ntrowles.cs4313.cs4313.proj4.network.Network;
  *
  */
 public class Agent {
-	private Network neuralNetwork = new Network();
+	private Network neuralNetwork;
 	private ArrayList<Matrix> xVectors;
 	private ArrayList<Matrix> yVectors;
 	
@@ -32,6 +32,7 @@ public class Agent {
 	 */
 	public Agent(){
 		this(new ArrayList<Path>());
+		neuralNetwork = new Network();
 	}
 	
 	/**
@@ -40,6 +41,7 @@ public class Agent {
 	 */
 	public Agent(List<Path> history){
 		this.history = history;
+		this.neuralNetwork = new Network();
 	}
 	
 	public Action selectAction(State curState){

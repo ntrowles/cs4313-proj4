@@ -250,6 +250,7 @@ public class State {
 	 * @return The updated state after a dig.
 	 */
 	private State dig(PositionInfo pInfo, PositionInfo[][] minesweeperBoard){
+		int newScore = 0;
 		int x = pInfo.getPosition().getX();
 		int y = pInfo.getPosition().getY();
 		int lengthY = minesweeperBoard.length;
@@ -260,9 +261,9 @@ public class State {
 		pInfo.setHidden(false);
 
 		//If its a bomb YOU GOT ISIS'D BITCH!!!!
-		if(this.minesweeperBoard[y][x].isBomb()){
+		if(minesweeperBoard[y][x].isBomb()){
 			//Return a new state with terminal set to true
-			return new State(minesweeperBoard, this.score, this.getNumBombs() - 1, true, copyPositionArray(getBombPosns()), copyPositionArray(getNonBombPosns()));
+			return new State(minesweeperBoard, score, this.getNumBombs() - 1, true, copyPositionArray(getBombPosns()), copyPositionArray(getNonBombPosns()));
 		}
 		
 		//perform dig around surrounding positions if current position has no bombs around it
@@ -273,7 +274,9 @@ public class State {
 					if(x+j >=0 && y+i >= 0 && x+j < lengthX && y+i < lengthY &&
 							minesweeperBoard[y+i][x+j].isHidden() == true){
 						
-						dig(minesweeperBoard[y+i][x+j], minesweeperBoard);
+						State intermediateState = dig(minesweeperBoard[y+i][x+j], minesweeperBoard);
+						double intermediateScore = intermediateState.getScore()-this.score;
+						newScore += intermediateScore;
 					}
 				}
 			}
@@ -282,7 +285,7 @@ public class State {
 		//This is right AFTER we change the score in the correct manner.
 		ArrayList<Position> bombPosnsCopy = copyPositionArray(bombPosns);
 		ArrayList<Position> nonBombPosnsCopy = copyPositionArray(nonBombPosns);
-		return new State(minesweeperBoard, this.score + 1.0, this.getNumBombs(), false, bombPosnsCopy, nonBombPosnsCopy);
+		return new State(minesweeperBoard, this.score + 1.0 + newScore, this.getNumBombs(), false, bombPosnsCopy, nonBombPosnsCopy);
 	}
 
 	/**

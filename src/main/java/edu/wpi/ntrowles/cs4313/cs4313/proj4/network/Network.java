@@ -44,7 +44,13 @@ public class Network {
 	}
 
 	public Network(){
-		this(3, new ArrayList<Integer>(), new ArrayList<Matrix>());
+		this.numLayers = 4;
+		ArrayList<Integer> numNeurons = new ArrayList<Integer>();
+		numNeurons.add(24);
+		numNeurons.add(9);
+		numNeurons.add(9);
+		numNeurons.add(1);
+		this.numNeurons = numNeurons;
 	}
 	
 	public Network(int numLayers, ArrayList<Integer> numNeurons){
@@ -63,7 +69,7 @@ public class Network {
 	
 	public ArrayList<Matrix> initializeThetas(){
 		ArrayList<Matrix> thetas = new ArrayList<Matrix>();
-		for(int i=0; i<numNeurons.size()-1; i++){
+		for(int i=0; i<numLayers-1; i++){
 			Matrix curTheta = new Matrix(numNeurons.get(i+1), numNeurons.get(i));
 			for(int j=0; j<curTheta.getRowDimension(); j++){
 				for(int k=0; k<curTheta.getColumnDimension(); k++){
