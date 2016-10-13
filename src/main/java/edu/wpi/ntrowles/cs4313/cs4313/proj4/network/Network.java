@@ -9,6 +9,7 @@ public class Network {
 	double randRange;
 	ArrayList<Integer> numNeurons; // number of neurons at each layer
 	ArrayList<Matrix> Thetas; // weights between each layer
+	double alpha; //learning rate
 	
 	public int getNumLayers() {
 		return numLayers;
@@ -100,7 +101,7 @@ public class Network {
 		}
 		
 		for(int i=0; i<xVectors.size(); i++){
-			ArrayList<Matrix> aList = forwardPropogate(xVectors.get(i), yVectors.get(i));
+			ArrayList<Matrix> aList = forwardPropogate(xVectors.get(i));
 			ArrayList<Matrix> dList = new ArrayList<Matrix>(numLayers);
 			Matrix dOutput = aList.get(aList.size()-1).minus(yVectors.get(i));
 			dList.set(numLayers-1, dOutput);
@@ -145,5 +146,13 @@ public class Network {
 //		}
 		
 		return aList;
+	}
+	
+	public void gradientDescent(ArrayList<Matrix> xVectors, ArrayList<Matrix> yVectors){
+		ArrayList<Matrix> DeltaList = backPropagate(xVectors, yVectors);
+		for(int i=0; i<Thetas.size(); i++){
+			Matrix curTheta = Thetas.get(i);
+			Thetas.set(i, curTheta.minus(DeltaList.get(i).times(alpha)));
+		}
 	}
 }

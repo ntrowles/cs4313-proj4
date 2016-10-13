@@ -73,5 +73,10 @@ public class Agent {
 		return bestAction;
 	}
 	
+	public void train(int iterations){
+		for(int i=0; i<iterations; i++){
+			neuralNetwork.gradientDescent();
+		}
+	}
 	
 }
