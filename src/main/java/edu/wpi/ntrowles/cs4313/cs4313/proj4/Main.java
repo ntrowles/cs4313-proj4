@@ -1,5 +1,7 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4;
 
+import java.util.ArrayList;
+
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Agent;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.MoveType;
@@ -15,6 +17,8 @@ public class Main {
 		boolean continuePlaying = true;
 		boolean newGame = true;
 		int numGames = 0;
+		ArrayList<double[]> gameScores = new ArrayList<double[]>(); 
+		
 		
 		Agent agent = new Agent();
 		State curState = new State();
@@ -48,6 +52,7 @@ public class Main {
 				System.out.println(curState.toString());
 				System.out.println(print2DArray(curState.percieve()));
 				System.out.println(curState.getScore());
+				newGame = false;
 			}
 			
 			/**
@@ -90,8 +95,9 @@ public class Main {
 				numGames++;
 				newGame = true;
 			}
-			if(numGames == 50){
-				continuePlaying = false;
+			if(numGames % 50 == 0){
+				agent.train(10);
+				//continuePlaying = false;
 			}
 		}
 	
