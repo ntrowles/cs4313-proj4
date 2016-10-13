@@ -252,7 +252,7 @@ public class State {
 		}
 		
 		//This is right AFTER we change the score in the correct manner.
-		return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
+		return new State(this.minesweeperBoard, this.score + 1.0, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
 	}
 
 	/**
