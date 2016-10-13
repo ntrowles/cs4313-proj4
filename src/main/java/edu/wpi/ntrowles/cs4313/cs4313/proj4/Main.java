@@ -2,6 +2,8 @@ package edu.wpi.ntrowles.cs4313.cs4313.proj4;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Agent;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.MoveType;
@@ -97,19 +99,23 @@ public class Main {
 				numGames++;
 				newGame = true;
 			}
-			if(numGames % 50 == 0){
+			if(numGames % 50 == 0 && newGame){
 				gameScoreSet.add(curGameScores);
 				curGameScores = new double[50];
-				agent.train(10);
+				agent.train(100);
 				//continuePlaying = false;
-			} else if(numGames == 500){
+			} else if(numGames == 5000){
 				continuePlaying = false;
 			}
 		}
 		
 		for(int i=0; i<gameScoreSet.size(); i++){
 			System.out.println(printArray(gameScoreSet.get(i)));
-			
+			int sum = 0;
+			for(int j=0; j<gameScoreSet.get(i).length; j++){
+				sum += gameScoreSet.get(i)[j];
+			}
+			System.out.println("Avg: " + sum/gameScoreSet.get(i).length + " | " + printArray(gameScoreSet.get(i)));
 		}
 	}
 	
@@ -131,7 +137,7 @@ public class Main {
 			b.append(arr[i]);
 			b.append(",");
 		}
-		b.append(arr[arr.length]);
+		b.append(arr[arr.length-1]);
 		return b.toString();
 	}
 	
