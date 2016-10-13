@@ -94,9 +94,9 @@ public class State {
 		this.score = score;
 		this.numBombs = numBombs;
 		
-		
 		this.bombPosns = new ArrayList<Position>();
 		this.nonBombPosns = new ArrayList<Position>();
+		initializeBoard();
 		
 		initializeBoard();
 		
@@ -179,6 +179,15 @@ public class State {
 		minesweeperBoard[randPosn.getY()][randPosn.getX()].setBomb(true);
 		nonBombPosns.remove(randPosnIndex);
 		bombPosns.add(randPosn);
+		
+		for(int i = -1; i <= 1; i++){
+			for(int j = -1; j <= 1; j++){
+				if(i != 0 && j != 0){
+					minesweeperBoard[randPosn.getY() + j][randPosn.getX() + i]
+						.setNumNeighbors(minesweeperBoard[randPosn.getY()][randPosn.getX()].getNumNeighbors() + 1);
+				}
+			}
+		}
 		
 	}
 	
