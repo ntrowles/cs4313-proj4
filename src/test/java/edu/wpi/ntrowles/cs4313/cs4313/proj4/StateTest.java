@@ -12,7 +12,7 @@ public class StateTest extends State {
 	
 	State testState;
 	
-	//@Test
+	@Test
 	public void setup () {
 		/*ArrayList<Position> thing = new ArrayList<Position>();
 		thing.add(Position(1,1));
@@ -33,6 +33,20 @@ public class StateTest extends State {
 >>>>>>> refs/remotes/origin/master
 		
 	}*/
+
+//	public void toStringTest(){
+//
+//		
+//
+//		for(int r = 0; r < 10; r++){
+//			for(int c = 0; c < 10; c++){
+//				assertTrue(testState.percieve()[r][c] == 'h');
+//			}
+//			
+//		}
+//
+//	}
+
 	
 	@Test
 	public void getNumBombsTest(){

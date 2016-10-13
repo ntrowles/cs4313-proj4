@@ -226,14 +226,9 @@ public class State {
 			
 			//dig
 			return dig(nextBoard[y][x], nextBoard);
+
 			
-			/* Why do we have this again?
-			 * 
-			 * 
-			 *else{minesweeperBoard[x][y].
-			 *else Square at position becomes revealed, and
-			 *possibly many others.
-			 */
+			//return new State(newState.minesweeperBoard, newState.score + 1.0, newState.getNumBombs(), false, newState.getBombPosns(), newState.nonBombPosns);
 			
 		case FLAG:
 			minesweeperBoard[x][y].setMarker('f');
@@ -243,10 +238,7 @@ public class State {
 			return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
 	
 		}
-		
-		//Make the next state based on updated information and return
-		State nextState = new State();
-		return nextState;
+		return new State();
 	}
 	
 	/**
@@ -266,7 +258,7 @@ public class State {
 		//perform dig
 		//Is this where we modify score? (Because nothing hidden must affect the heuristic somehow?)
 		pInfo.setHidden(false);
-		
+
 		//If its a bomb YOU GOT ISIS'D BITCH!!!!
 		if(this.minesweeperBoard[y][x].isBomb()){
 			//Return a new state with terminal set to true
@@ -299,6 +291,40 @@ public class State {
 	 */
 	public boolean isTerminal() {
 		return terminal;
+	}
+	
+	/**
+	 * Returns the current board stte of the game
+	 * as if it was a player.
+	 * @param curState Active state.
+	 * @return Two - d character array of the board
+	 */
+	public char[][] percieve(){
+		char[][] board = new char[this.minesweeperBoard.length][this.minesweeperBoard[0].length];
+		for(int r = 0; r < board.length; r++){
+			for(int c = 0; c < board[r].length; c++){
+				if(minesweeperBoard[r][c].isHidden()){
+					if(minesweeperBoard[r][c].getMarker() == 'f'){
+						board[r][c] = 'f';
+					}
+					else{
+						board[r][c] = 'h';
+					}
+				}
+				else if(!minesweeperBoard[r][c].isHidden()){
+					if(minesweeperBoard[r][c].isBomb()){
+						board[r][c] = 'b';
+					}
+					else if(minesweeperBoard[r][c].getNumNeighbors() > 0){
+						board[r][c] = (char)minesweeperBoard[r][c].getNumNeighbors();
+					}
+					else{
+						board[r][c] = 'c';
+					}
+				}
+			}
+		}
+		return board;
 	}
 	
 	/**
