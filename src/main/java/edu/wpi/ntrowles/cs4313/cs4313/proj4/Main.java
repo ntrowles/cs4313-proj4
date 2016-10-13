@@ -17,8 +17,8 @@ public class Main {
 		boolean continuePlaying = true;
 		boolean newGame = true;
 		int numGames = 0;
-		ArrayList<double[]> gameScores = new ArrayList<double[]>(); 
-		
+		ArrayList<double[]> gameScoreSet = new ArrayList<double[]>();
+		double[] curGameScores = new double[50];
 		
 		Agent agent = new Agent();
 		State curState = new State();
@@ -92,15 +92,25 @@ public class Main {
 			 * Update SM of main loop
 			 */
 			if(curState.isTerminal()){
+				curGameScores[numGames%50] = curState.getScore();
+				
 				numGames++;
 				newGame = true;
 			}
 			if(numGames % 50 == 0){
+				gameScoreSet.add(curGameScores);
+				curGameScores = new double[50];
 				agent.train(10);
 				//continuePlaying = false;
+			} else if(numGames == 500){
+				continuePlaying = false;
 			}
 		}
-	
+		
+		for(int i=0; i<gameScoreSet.size(); i++){
+			System.out.println(printArray(gameScoreSet.get(i)));
+			
+		}
 	}
 	
 	public static String print2DArray(char[][] arr){
@@ -112,6 +122,16 @@ public class Main {
 			b.append("\n");
 		}
 		
+		return b.toString();
+	}
+	
+	public static String printArray(double[] arr){
+		StringBuilder b = new StringBuilder();
+		for(int i=0; i<arr.length-1; i++){
+			b.append(arr[i]);
+			b.append(",");
+		}
+		b.append(arr[arr.length]);
 		return b.toString();
 	}
 	
