@@ -102,7 +102,7 @@ public class Agent {
 				} else if(percievedState[curYPosn][curXPosn] == 'h' || percievedState[curYPosn][curXPosn] == 'f'){
 					xVector.set(count, 0, -1.0);
 				} else if(percievedState[curYPosn][curXPosn] >= '0' && percievedState[curYPosn][curXPosn] <= '9'){
-					String s = "" + percievedState[i][j];
+					String s = "" + percievedState[curYPosn][curXPosn];
 					xVector.set(count, 0, Double.parseDouble(s));
 				} else{
 					xVector.set(count, 1 , -1);
