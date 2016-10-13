@@ -51,8 +51,8 @@ public class Agent {
 	public double doAction(State curState){
 		Action nextAction = selectAction(curState);
 
+		
 		return 0;
-
 	}
 	
 	

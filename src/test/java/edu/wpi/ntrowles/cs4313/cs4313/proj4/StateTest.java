@@ -29,7 +29,6 @@ public class StateTest extends State {
 		//this.testState.initializeBoard();
 	}
 	
-
 	
 	@Test
 	public void getNumBombsTest(){
