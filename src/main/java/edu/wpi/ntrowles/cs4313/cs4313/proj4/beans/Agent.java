@@ -33,6 +33,8 @@ public class Agent {
 	public Agent(){
 		this(new ArrayList<Path>());
 		neuralNetwork = new Network();
+		xVectors = new ArrayList<Matrix>();
+		yVectors = new ArrayList<Matrix>();
 	}
 	
 	/**
@@ -115,10 +117,19 @@ public class Agent {
 		return xVector;
 	}
 	
-	public void updateHistory(Action action, State newState){
+	public void updateHistory(Action action, State oldState, State newState){
 		//TODO update percieved state/path thing (not really that high a priority, maybe if we want it for another agent algo)
 		
 		//TODO update training set pairs
+		xVectors.add(assignXVector(action, oldState.percieve()));
+		Matrix yVector = new Matrix(1,1);
+		//1 is bomb, 0 is non-bomb
+		yVector.set(0, 0, (newState.percieve()[action.getPosition().getY()][action.getPosition().getX()] == 'b') ? 1 : 0);
+		yVectors.add(yVector);
+	}
+	
+	public void newGameInit(){
+		//TODO holy shit this is the last thing on my priority list
 	}
 	
 }

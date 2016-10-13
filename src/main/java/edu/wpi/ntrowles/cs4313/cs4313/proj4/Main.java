@@ -13,6 +13,8 @@ public class Main {
 		 * Initialize State, Agent, and flags
 		 */
 		boolean continuePlaying = true;
+		boolean newGame = true;
+		int numGames = 0;
 		
 		Agent agent = new Agent();
 		State curState = new State();
@@ -21,12 +23,12 @@ public class Main {
 		
 		
 		
-		/**
-		 * Print out state information
-		 */
-		System.out.println(curState.toString());
-		System.out.println(print2DArray(curState.percieve()));
-		System.out.println(curState.getScore());
+//		/**
+//		 * Print out state information
+//		 */
+//		System.out.println(curState.toString());
+//		System.out.println(print2DArray(curState.percieve()));
+//		System.out.println(curState.getScore());
 		
 		
 		/**
@@ -35,6 +37,18 @@ public class Main {
 		while(continuePlaying){
 			//a.doAction(curState);
 			//Action action = new Action(new Position((int)(Math.random()*curState.getMinesweeperBoard().length), (int)(Math.random()*curState.getMinesweeperBoard()[0].length)), MoveType.DIG);
+			
+			/**
+			 * Game initialization
+			 */
+			if(newGame){
+				//agent.newGameInit(curState);
+				//print out state info
+				curState = new State();
+				System.out.println(curState.toString());
+				System.out.println(print2DArray(curState.percieve()));
+				System.out.println(curState.getScore());
+			}
 			
 			/**
 			 * Agent selects action
@@ -51,29 +65,33 @@ public class Main {
 			 */
 			State nextState = curState.nextState(action);
 			//agent.updateHistory(curState, nextState, action);
-			curState = nextState;
+			
 			
 			/**
 			 * Print out state information
 			 */
-			System.out.println(curState.toString());
-			System.out.println(print2DArray(curState.percieve()));
-			System.out.println(curState.getScore());
+			System.out.println(nextState.toString());
+			System.out.println(print2DArray(nextState.percieve()));
+			System.out.println(nextState.getScore());
 			
 			/**
 			 * Give information back to agent
 			 */
 			
 			//action that agent took, and resulting state
-			//TODO implement
-			agent.updateHistory(action, curState);
+			//TODO implement (sort of done)
+			agent.updateHistory(action, curState, nextState);
 			
+			curState = nextState;
 			/**
 			 * Update SM of main loop
 			 */
 			if(curState.isTerminal()){
+				numGames++;
+				newGame = true;
+			}
+			if(numGames == 50){
 				continuePlaying = false;
-				
 			}
 		}
 	
