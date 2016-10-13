@@ -179,15 +179,19 @@ public class State {
 		minesweeperBoard[randPosn.getY()][randPosn.getX()].setBomb(true);
 		nonBombPosns.remove(randPosnIndex);
 		bombPosns.add(randPosn);
+		int y = randPosn.getY();
+		int x = randPosn.getX();
 		
 		for(int i = -1; i <= 1; i++){
 			for(int j = -1; j <= 1; j++){
-				if(i != 0 && j != 0){
-					minesweeperBoard[randPosn.getY() + j][randPosn.getX() + i]
-						.setNumNeighbors(minesweeperBoard[randPosn.getY()][randPosn.getX()].getNumNeighbors() + 1);
+				if(!(i == 0 && j == 0) && x+j >=0 && y+i >= 0 && x+j < minesweeperBoard[0].length && y+i < minesweeperBoard.length){
+					minesweeperBoard[randPosn.getY() + i][randPosn.getX() + j]
+						.setNumNeighbors(minesweeperBoard[randPosn.getY()+i][randPosn.getX()+j].getNumNeighbors() + 1);
 				}
 			}
 		}
+		
+		System.out.println(toString());
 		
 	}
 	

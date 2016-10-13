@@ -12,14 +12,14 @@ public class Main {
 		State curState = new State();
 //		curState.initializeBoard();
 		curState.toString();
-		while(continuePlaying){
+//		while(continuePlaying){
 			a.doAction(curState);
 			
 			System.out.println(curState.toString());
 			if(curState.isTerminal()){
 				continuePlaying = false;
 			}
-		}
+//		}
 	
 	}
 	
