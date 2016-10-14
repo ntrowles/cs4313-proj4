@@ -13,7 +13,7 @@ import edu.wpi.ntrowles.cs4313.cs4313.proj4.network.Network;
  * @author bgsarkis
  *
  */
-public class AgentNN extends Agent{
+public class AgentAutoencoderFlag extends Agent{
 	private Network neuralNetwork;
 	private ArrayList<Matrix> xVectors;
 	private ArrayList<Matrix> yVectors;
@@ -31,7 +31,7 @@ public class AgentNN extends Agent{
 	/**
 	 * Default agent constructor, creates a new path collection.
 	 */
-	public AgentNN(){
+	public AgentAutoencoderFlag(){
 		this(new ArrayList<Path>());
 		neuralNetwork = new Network();
 		xVectors = new ArrayList<Matrix>();
@@ -42,9 +42,25 @@ public class AgentNN extends Agent{
 	 * Overloaded agent constructor, takes in a history of past games.
 	 * @param history The playing history of the agent.
 	 */
-	public AgentNN(List<Path> history){
+	public AgentAutoencoderFlag(List<Path> history){
 		this.history = history;
 		this.neuralNetwork = new Network();
+	}
+	
+	public void train(int iterations){
+		// ArrayList of integers
+		ArrayList<Integer> layerNum = new ArrayList<Integer>();
+		layerNum.add(xVectors.get(0).getRowDimension());
+		layerNum.add(xVectors.get(0).getRowDimension()/2);
+		layerNum.add(xVectors.get(0).getRowDimension());
+		Network autoEncoderNet = new Network(3, layerNum);
+		
+		
+		for(int i = 0; i < iterations; i++){
+			autoEncoderNet.gradientDescent(xVectors, xVectors);
+		}
+		
+		neuralNetwork.setThetas(autoEncoderNet.getThetas(), 0);
 	}
 	
 	public Action selectAction(State curState){
@@ -81,12 +97,6 @@ public class AgentNN extends Agent{
 		
 		//select best actions based on function
 		return bestAction;
-	}
-	
-	public void train(int iterations){
-		for(int i=0; i<iterations; i++){
-			neuralNetwork.gradientDescent(xVectors, yVectors);
-		}
 	}
 	
 	public Matrix assignXVector(Action action, char[][] percievedState){
@@ -141,3 +151,4 @@ public class AgentNN extends Agent{
 	
 	
 }
+
