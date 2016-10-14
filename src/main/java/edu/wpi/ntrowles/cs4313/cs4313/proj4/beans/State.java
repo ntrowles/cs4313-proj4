@@ -231,11 +231,10 @@ public class State {
 			//return new State(newState.minesweeperBoard, newState.score + 1.0, newState.getNumBombs(), false, newState.getBombPosns(), newState.nonBombPosns);
 			
 		case FLAG:
-			minesweeperBoard[x][y].setMarker('f');
 			//Return a new state that reflects the updated marker.
 			//Because the position info was already changed here, 
 			// we just return what is already there.
-			return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
+			return flag(nextBoard[y][x], nextBoard);
 	
 		}
 		return new State();
@@ -286,6 +285,15 @@ public class State {
 		ArrayList<Position> bombPosnsCopy = copyPositionArray(bombPosns);
 		ArrayList<Position> nonBombPosnsCopy = copyPositionArray(nonBombPosns);
 		return new State(minesweeperBoard, this.score + 1.0 + newScore, this.getNumBombs(), false, bombPosnsCopy, nonBombPosnsCopy);
+	}
+	
+	private State flag(PositionInfo pInfo, PositionInfo[][] minesweeperBoard){
+		minesweeperBoard[pInfo.getPosition().getY()][pInfo.getPosition().getX()].setMarker('f');
+
+		ArrayList<Position> bombPosnsCopy = copyPositionArray(bombPosns);
+		ArrayList<Position> nonBombPosnsCopy = copyPositionArray(nonBombPosns);
+		
+		return new State(minesweeperBoard, this.score, this.getNumBombs(), false, bombPosnsCopy, nonBombPosnsCopy);
 	}
 
 	/**
