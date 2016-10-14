@@ -84,6 +84,21 @@ public class Agent {
 		}
 	}
 	
+	public void trainWithAutoencoder(int iterations){
+		// ArrayList of integers
+		ArrayList<Integer> layerNum = new ArrayList<Integer>();
+		layerNum.add(xVectors.get(0).getRowDimension());
+		layerNum.add(xVectors.get(0).getRowDimension()/2);
+		layerNum.add(xVectors.get(0).getRowDimension());
+		Network autoEncoderNet = new Network(3, layerNum);
+		
+		
+		for(int i = 0; i < iterations; i++){
+			autoEncoderNet.gradientDescent(xVectors, xVectors);
+		}
+		
+		neuralNetwork.setThetas(autoEncoderNet.getThetas(), 0);
+	}
 	public Matrix assignXVector(Action action, char[][] percievedState){
 		Matrix xVector = new Matrix(24,1);
 		int xPosn = action.getPosition().getX();
