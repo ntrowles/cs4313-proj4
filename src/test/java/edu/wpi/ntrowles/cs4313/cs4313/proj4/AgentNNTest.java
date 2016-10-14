@@ -2,20 +2,15 @@ package edu.wpi.ntrowles.cs4313.cs4313.proj4;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.junit.Test;
 
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.AgentNN;
-import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.MoveType;
-import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Position;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.State;
 
-public class Main {
-
-	public static void main(String[] args) {
-		/**
-		 * Initialize State, Agent, and flags
-		 */
+public class AgentNNTest {
+	@Test
+	public void agentTestRun(){
 		boolean continuePlaying = true;
 		boolean newGame = true;
 		int numGames = 0;
@@ -24,32 +19,15 @@ public class Main {
 		
 		AgentNN agent = new AgentNN();
 		State curState = new State();
-//		curState.initializeBoard();
-//		curState.toString();
-		
-		
-		
-//		/**
-//		 * Print out state information
-//		 */
-//		System.out.println(curState.toString());
-//		System.out.println(print2DArray(curState.percieve()));
-//		System.out.println(curState.getScore());
-		
-		
+
 		/**
 		 * Enter loop until told to stop program
 		 */
 		while(continuePlaying){
-			//a.doAction(curState);
-			//Action action = new Action(new Position((int)(Math.random()*curState.getMinesweeperBoard().length), (int)(Math.random()*curState.getMinesweeperBoard()[0].length)), MoveType.DIG);
-			
 			/**
 			 * Game initialization
 			 */
 			if(newGame){
-				//agent.newGameInit(curState);
-				//print out state info
 				curState = new State();
 				System.out.println(curState.toString());
 				System.out.println(print2DArray(curState.percieve()));
@@ -71,7 +49,6 @@ public class Main {
 			 * Perform action on state to get next state, assign it to be curState
 			 */
 			State nextState = curState.nextState(action);
-			//agent.updateHistory(curState, nextState, action);
 			
 			
 			/**
@@ -104,7 +81,7 @@ public class Main {
 				curGameScores = new double[50];
 				agent.train(20);
 				//continuePlaying = false;
-			} else if(numGames == 100){
+			} else if(numGames == 500){
 				continuePlaying = false;
 			}
 		}
@@ -118,6 +95,7 @@ public class Main {
 			System.out.println("Avg: " + sum/gameScoreSet.get(i).length + " | " + printArray(gameScoreSet.get(i)));
 		}
 	}
+	
 	
 	public static String print2DArray(char[][] arr){
 		StringBuilder b = new StringBuilder();

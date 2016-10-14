@@ -139,6 +139,14 @@ public class Network {
 		}
 		
 		for(int i=0; i<xVectors.size(); i++){
+			Matrix xVector = xVectors.get(i);
+			Matrix yVector = yVectors.get(i);
+//			for(int i=0; i<input.getRowDimension(); i++){
+//				for(int j=0; j<input.getColumnDimension(); j++){
+//					System.out.print(onesMatrix.get(i,j) + ",");
+//				}
+//			}
+			
 			ArrayList<Matrix> aList = forwardPropogate(xVectors.get(i));
 			ArrayList<Matrix> dList = new ArrayList<Matrix>(numLayers);
 			for(int j=0; j<numLayers; j++){
