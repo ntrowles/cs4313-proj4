@@ -137,4 +137,21 @@ public class AgentNN extends Agent{
 		//TODO holy shit this is the last thing on my priority list
 	}
 	
+	
+	public void trainWithAutoencoder(int iterations){
+		// ArrayList of integers
+		ArrayList<Integer> layerNum = new ArrayList<Integer>();
+		layerNum.add(xVectors.get(0).getRowDimension());
+		layerNum.add(xVectors.get(0).getRowDimension()/2);
+		layerNum.add(xVectors.get(0).getRowDimension());
+		Network autoEncoderNet = new Network(3, layerNum);
+		
+		
+		for(int i = 0; i < iterations; i++){
+			autoEncoderNet.gradientDescent(xVectors, xVectors);
+		}
+		
+		neuralNetwork.setThetas(autoEncoderNet.getThetas(), 0);
+	}
+	
 }

@@ -42,6 +42,10 @@ public class Network {
 	public void setThetas(ArrayList<Matrix> thetas) {
 		Thetas = thetas;
 	}
+	
+	public void setThetas(ArrayList<Matrix> thetas, int index){
+		Thetas.set(index, thetas.get(index));
+	}
 
 	public Network(){
 		this.numLayers = 4;
