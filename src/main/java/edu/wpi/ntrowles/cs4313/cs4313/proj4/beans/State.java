@@ -93,10 +93,12 @@ public class State {
 		this.minesweeperBoard = new PositionInfo[boardSizeY][boardSizeX];
 		this.score = score;
 		this.numBombs = numBombs;
-		initializeBoard();
 		
 		this.bombPosns = new ArrayList<Position>();
 		this.nonBombPosns = new ArrayList<Position>();
+		initializeBoard();
+		
+		initializeBoard();
 		
 		this.terminal = terminal;
 	}
@@ -115,6 +117,9 @@ public class State {
 		this.score = score;
 		this.numBombs = numBombs;
 		this.terminal = terminal;
+		
+		this.bombPosns = bombPosns;
+		this.nonBombPosns = nonBombPosns;
 	}
 
 	/**
@@ -149,7 +154,7 @@ public class State {
 	public void initializeBoard(){
 		for(int i=0; i<minesweeperBoard.length; i++){
 			for(int j=0; j<minesweeperBoard[0].length; j++){
-				minesweeperBoard[i][j] = new PositionInfo();
+				minesweeperBoard[i][j] = new PositionInfo(j, i);
 				nonBombPosns.add(new Position(j, i));
 			}
 		}
@@ -161,6 +166,8 @@ public class State {
 	/**
 	 * Helper function to drop bombs (but he keeps on forgetting)
 	 * what he wrote down the whole crowd goes spaghetti....
+	 * 
+	 * ^^Sarkis I swear...
 	 * 
 	 * Helper function to place bombs in random positions on the board
 	 * This is accomplished by randomly selecting a position
@@ -177,6 +184,19 @@ public class State {
 		minesweeperBoard[randPosn.getY()][randPosn.getX()].setBomb(true);
 		nonBombPosns.remove(randPosnIndex);
 		bombPosns.add(randPosn);
+		int y = randPosn.getY();
+		int x = randPosn.getX();
+		
+		for(int i = -1; i <= 1; i++){
+			for(int j = -1; j <= 1; j++){
+				if(!(i == 0 && j == 0) && x+j >=0 && y+i >= 0 && x+j < minesweeperBoard[0].length && y+i < minesweeperBoard.length){
+					minesweeperBoard[randPosn.getY() + i][randPosn.getX() + j]
+						.setNumNeighbors(minesweeperBoard[randPosn.getY()+i][randPosn.getX()+j].getNumNeighbors() + 1);
+				}
+			}
+		}
+		
+//		System.out.println(toString());
 		
 	}
 	
@@ -185,6 +205,9 @@ public class State {
 	 * @param a The click made to a certain coordinate.
 	 * @return Updated state of the board.
 	 */
+	//FIXME this shouldn't update the board, it should copy the board and make any alterations then
+	//FIXED
+	//NOT fixed in flagging action
 	public State nextState(Action a){
 		//Action contains a position
 		//This is the position that will be clicked
@@ -194,20 +217,18 @@ public class State {
 		int x = toClick.getX();
 		int y = toClick.getY();
 		
+		PositionInfo[][] nextBoard = copyBoard();
+		
 		switch(a.getMoveType()){
-			
+		
+		
 		case DIG:
 			
 			//dig
-			return dig(minesweeperBoard[x][y]);
+			return dig(nextBoard[y][x], nextBoard);
+
 			
-			/* Why do we have this again?
-			 * 
-			 * 
-			 *else{minesweeperBoard[x][y].
-			 *else Square at position becomes revealed, and
-			 *possibly many others.
-			 */
+			//return new State(newState.minesweeperBoard, newState.score + 1.0, newState.getNumBombs(), false, newState.getBombPosns(), newState.nonBombPosns);
 			
 		case FLAG:
 			minesweeperBoard[x][y].setMarker('f');
@@ -217,10 +238,7 @@ public class State {
 			return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
 	
 		}
-		
-		//Make the next state based on updated information and return
-		State nextState = new State();
-		return nextState;
+		return new State();
 	}
 	
 	/**
@@ -231,37 +249,43 @@ public class State {
 	 * @param pInfo PositionInfo of interest.
 	 * @return The updated state after a dig.
 	 */
-	private State dig(PositionInfo pInfo){
+	private State dig(PositionInfo pInfo, PositionInfo[][] minesweeperBoard){
+		int newScore = 0;
 		int x = pInfo.getPosition().getX();
 		int y = pInfo.getPosition().getY();
-		int length = minesweeperBoard[0].length;
+		int lengthY = minesweeperBoard.length;
+		int lengthX = minesweeperBoard[0].length;
 		
 		//perform dig
 		//Is this where we modify score? (Because nothing hidden must affect the heuristic somehow?)
 		pInfo.setHidden(false);
-		
+
 		//If its a bomb YOU GOT ISIS'D BITCH!!!!
-		if(this.minesweeperBoard[x][y].isBomb()){
+		if(minesweeperBoard[y][x].isBomb()){
 			//Return a new state with terminal set to true
-			return new State(this.minesweeperBoard, this.score, this.getNumBombs() - 1, true, this.getBombPosns(), this.getNonBombPosns());
+			return new State(minesweeperBoard, score, this.getNumBombs() - 1, true, copyPositionArray(getBombPosns()), copyPositionArray(getNonBombPosns()));
 		}
 		
 		//perform dig around surrounding positions if current position has no bombs around it
 		//Modify the score to represent new state ?
-		if(minesweeperBoard[x][y].getNumNeighbors() == 0){
+		if(minesweeperBoard[y][x].getNumNeighbors() == 0){
 			for(int i = -1; i <= 1; i++){
 				for(int j = -1; j <= 1; j++){
-					if(x+i >=0 && y+i >= 0 && x+i < length && y+i < length &&
-							minesweeperBoard[x+i][y+i].isHidden() == true){
+					if(x+j >=0 && y+i >= 0 && x+j < lengthX && y+i < lengthY &&
+							minesweeperBoard[y+i][x+j].isHidden() == true){
 						
-						dig(minesweeperBoard[x+i][y+i]);
+						State intermediateState = dig(minesweeperBoard[y+i][x+j], minesweeperBoard);
+						double intermediateScore = intermediateState.getScore()-this.score;
+						newScore += intermediateScore;
 					}
 				}
 			}
 		}
 		
 		//This is right AFTER we change the score in the correct manner.
-		return new State(this.minesweeperBoard, this.score, this.getNumBombs(), false, this.getBombPosns(), this.getNonBombPosns());
+		ArrayList<Position> bombPosnsCopy = copyPositionArray(bombPosns);
+		ArrayList<Position> nonBombPosnsCopy = copyPositionArray(nonBombPosns);
+		return new State(minesweeperBoard, this.score + 1.0 + newScore, this.getNumBombs(), false, bombPosnsCopy, nonBombPosnsCopy);
 	}
 
 	/**
@@ -270,6 +294,40 @@ public class State {
 	 */
 	public boolean isTerminal() {
 		return terminal;
+	}
+	
+	/**
+	 * Returns the current board stte of the game
+	 * as if it was a player.
+	 * @param curState Active state.
+	 * @return Two - d character array of the board
+	 */
+	public char[][] percieve(){
+		char[][] board = new char[this.minesweeperBoard.length][this.minesweeperBoard[0].length];
+		for(int r = 0; r < board.length; r++){
+			for(int c = 0; c < board[r].length; c++){
+				if(minesweeperBoard[r][c].isHidden()){
+					if(minesweeperBoard[r][c].getMarker() == 'f'){
+						board[r][c] = 'f';
+					}
+					else{
+						board[r][c] = 'h';
+					}
+				}
+				else if(!minesweeperBoard[r][c].isHidden()){
+					if(minesweeperBoard[r][c].isBomb()){
+						board[r][c] = 'b';
+					}
+					else if(minesweeperBoard[r][c].getNumNeighbors() > 0){
+						board[r][c] = (char) (minesweeperBoard[r][c].getNumNeighbors() + 48); //Add ascii value of 48: http://stackoverflow.com/questions/17984975/convert-int-to-char-in-java
+					}
+					else{
+						board[r][c] = 'c';
+					}
+				}
+			}
+		}
+		return board;
 	}
 	
 	/**
@@ -300,5 +358,33 @@ public class State {
 		}
 		
 		return b.toString();
+	}
+	
+	public PositionInfo[][] copyBoard(){
+		//copy board
+		PositionInfo[][] boardCopy = new PositionInfo[minesweeperBoard.length][minesweeperBoard[0].length];
+		for(int i=0; i<minesweeperBoard.length; i++){
+			for(int j=0; j<minesweeperBoard.length; j++){
+				boardCopy[i][j] = minesweeperBoard[i][j].copy();
+			}
+		}
+		
+		return boardCopy;
+		
+//		//copy arrays
+//		ArrayList<Position> bombPosnsCopy = new ArrayList<Position>(this.bombPosns);
+//		ArrayList<Position> nonBombPosnsCopy = new ArrayList<Position>(this.nonBombPosns);
+//		
+//		//return new State with copied information
+//		return new State(boardCopy, this.score, this.numBombs, this.terminal, bombPosnsCopy, nonBombPosnsCopy);
+	}
+	
+	public ArrayList<Position> copyPositionArray(ArrayList<Position> posArray){
+		ArrayList<Position> copy = new ArrayList<Position>();
+		for(Position pos : posArray){
+			copy.add(new Position(pos.getX(), pos.getY()));
+		}
+		
+		return copy;
 	}
 }
