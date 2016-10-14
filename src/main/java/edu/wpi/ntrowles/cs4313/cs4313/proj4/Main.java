@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.apache.commons.lang.ArrayUtils;
 
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
-import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Agent;
+import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.AgentNN;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.MoveType;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Position;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.State;
@@ -22,7 +22,7 @@ public class Main {
 		ArrayList<double[]> gameScoreSet = new ArrayList<double[]>();
 		double[] curGameScores = new double[50];
 		
-		Agent agent = new Agent();
+		AgentNN agent = new AgentNN();
 		State curState = new State();
 //		curState.initializeBoard();
 //		curState.toString();
