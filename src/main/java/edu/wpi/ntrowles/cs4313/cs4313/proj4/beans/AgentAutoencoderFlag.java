@@ -63,6 +63,7 @@ public class AgentAutoencoderFlag extends Agent{
 		neuralNetwork.setThetas(autoEncoderNet.getThetas(), 0);
 	}
 	
+	
 	public Action selectAction(State curState){
 		System.out.println("Selecting action");
 		
@@ -72,28 +73,63 @@ public class AgentAutoencoderFlag extends Agent{
 		Action bestAction = new Action();
 		double bestActionH = 1;
 		boolean baInitialized = false;
+		
 		//Add all valid actions, DIG and FLAG type actions.
 		//TODO for now, I am only worried about digging actions, will add flagging actions later
 		for(int i=0; i<percievedState.length; i++){
 			for(int j=0; j<percievedState[0].length; j++){
 				if(percievedState[i][j] == 'h'){
-					Action curAction = new Action(new Position(j, i), MoveType.DIG);
-					System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
-					Matrix xVector = assignXVector(curAction, percievedState);
-					double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
-					System.out.println("Resulting hypothesis: " + curActionH);
-					if(!baInitialized){
-						bestAction = curAction;
-						//Matrix yVector = new Matrix(1, 1);
-						bestActionH = curActionH;
-						baInitialized = true;
-					} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
-						bestAction = curAction;
-						bestActionH = curActionH;
+					//Now we determine the difference between 0 or 1.  Pick the action that minimizes the difference
+					
+					Action digAtThisSpot = new Action(new Position(j, i), MoveType.DIG);
+					Action flagThisSpot = new Action(new Position(j, i), MoveType.FLAG);
+					Matrix selectVector = assignXVector(digAtThisSpot, percievedState);
+						if(neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0) < bestActionH){
+							bestActionH = neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						}
+						if(1 - neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0) < bestActionH){
+							bestActionH = 1 - neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						}
+						
+					//evaluate
+						//|1-hypothesis| < best difference
+					
+					//if(differenceFrom1 > differenceFrom0){
+						Action curAction = new Action(new Position(j, i), MoveType.FLAG);
+						System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
+						Matrix xVector = assignXVector(curAction, percievedState);
+						double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						System.out.println("Resulting hypothesis: " + curActionH);
+						if(!baInitialized){
+							bestAction = curAction;
+							//Matrix yVector = new Matrix(1, 1);
+							bestActionH = curActionH;
+							baInitialized = true;
+						} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
+							bestAction = curAction;
+							bestActionH = curActionH;
+						}
+					}
+					
+					//if(differenceFrom0 >= differenceFrom1){
+						Action curAction = new Action(new Position(j, i), MoveType.DIG);
+						System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
+						Matrix xVector = assignXVector(curAction, percievedState);
+						double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						System.out.println("Resulting hypothesis: " + curActionH);
+						if(!baInitialized){
+							bestAction = curAction;
+							//Matrix yVector = new Matrix(1, 1);
+							bestActionH = curActionH;
+							baInitialized = true;
+						} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
+							bestAction = curAction;
+							bestActionH = curActionH;
+						}
 					}
 				}
-			}
-		}
+			//}
+		//}
 		
 		//select best actions based on function
 		return bestAction;
