@@ -12,4 +12,5 @@ public abstract class Agent {
 	
 	public abstract Action selectAction(State state);
 	public abstract void updateHistory(Action action, State oldState, State newState);
+	public abstract void train (int iterations);
 }
