@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Jama.Matrix;
+import edu.wpi.ntrowles.cs4313.cs4313.proj4.base.Agent;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.network.Network;
 
 /**
@@ -12,7 +13,7 @@ import edu.wpi.ntrowles.cs4313.cs4313.proj4.network.Network;
  * @author bgsarkis
  *
  */
-public class Agent {
+public class AgentNN extends Agent{
 	private Network neuralNetwork;
 	private ArrayList<Matrix> xVectors;
 	private ArrayList<Matrix> yVectors;
@@ -30,7 +31,7 @@ public class Agent {
 	/**
 	 * Default agent constructor, creates a new path collection.
 	 */
-	public Agent(){
+	public AgentNN(){
 		this(new ArrayList<Path>());
 		neuralNetwork = new Network();
 		xVectors = new ArrayList<Matrix>();
@@ -41,7 +42,7 @@ public class Agent {
 	 * Overloaded agent constructor, takes in a history of past games.
 	 * @param history The playing history of the agent.
 	 */
-	public Agent(List<Path> history){
+	public AgentNN(List<Path> history){
 		this.history = history;
 		this.neuralNetwork = new Network();
 	}
