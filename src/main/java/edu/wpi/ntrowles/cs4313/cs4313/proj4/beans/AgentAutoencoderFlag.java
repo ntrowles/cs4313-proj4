@@ -51,7 +51,7 @@ public class AgentAutoencoderFlag extends Agent{
 		// ArrayList of integers
 		ArrayList<Integer> layerNum = new ArrayList<Integer>();
 		layerNum.add(xVectors.get(0).getRowDimension());
-		layerNum.add(xVectors.get(0).getRowDimension()/2);
+		layerNum.add(xVectors.get(0).getRowDimension()*3/8);
 		layerNum.add(xVectors.get(0).getRowDimension());
 		Network autoEncoderNet = new Network(3, layerNum);
 		
@@ -60,7 +60,12 @@ public class AgentAutoencoderFlag extends Agent{
 			autoEncoderNet.gradientDescent(xVectors, xVectors);
 		}
 		
+		neuralNetwork = new Network();
 		neuralNetwork.setThetas(autoEncoderNet.getThetas(), 0);
+		
+		for(int i = 0; i < iterations; i++){
+			autoEncoderNet.gradientDescent(xVectors, xVectors);
+		}
 	}
 	
 	
@@ -84,41 +89,61 @@ public class AgentAutoencoderFlag extends Agent{
 					Action digAtThisSpot = new Action(new Position(j, i), MoveType.DIG);
 					Action flagThisSpot = new Action(new Position(j, i), MoveType.FLAG);
 					Matrix selectVector = assignXVector(digAtThisSpot, percievedState);
-						//if a dig 	
-						if(neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0) < bestActionH){
-							bestActionH = neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
-							System.out.println("Action to evaluate: x=" + digAtThisSpot.getPosition().getX() + ", y=" + digAtThisSpot.getPosition().getY());
-							Matrix xVector = assignXVector(digAtThisSpot, percievedState);
-							double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
-							System.out.println("Resulting hypothesis: " + curActionH);
-							if(!baInitialized){
-								bestAction = digAtThisSpot;
-								//Matrix yVector = new Matrix(1, 1);
-								bestActionH = curActionH;
-								baInitialized = true;
-							} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
-								bestAction = digAtThisSpot;
-								bestActionH = curActionH;
-							}
-							
+					//if a dig 	
+					if(neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0) < bestActionH){
+//						bestActionH = neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						System.out.println("Action to evaluate: x=" + digAtThisSpot.getPosition().getX() + ", y=" + digAtThisSpot.getPosition().getY());
+						Matrix xVector = assignXVector(digAtThisSpot, percievedState);
+						double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						System.out.println("Resulting hypothesis: " + curActionH);
+						if(!baInitialized){
+							bestAction = digAtThisSpot;
+							//Matrix yVector = new Matrix(1, 1);
+							bestActionH = curActionH;
+							baInitialized = true;
+						} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
+							bestAction = digAtThisSpot;
+							bestActionH = curActionH;
 						}
-						//if a flag
-						else if(1 - neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0) < bestActionH){
-							bestActionH = 1 - neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
-							System.out.println("Action to evaluate: x=" + flagThisSpot.getPosition().getX() + ", y=" + flagThisSpot.getPosition().getY());
-							Matrix xVector = assignXVector(flagThisSpot, percievedState);
-							double curActionH = 1 - neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
-							System.out.println("Resulting hypothesis: " + curActionH);
-							if(!baInitialized){
-								bestAction = flagThisSpot;
-								//Matrix yVector = new Matrix(1, 1);
-								bestActionH = curActionH;
-								baInitialized = true;
-							} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
-								bestAction = flagThisSpot;
-								bestActionH = curActionH;
-							}
-						}	
+						
+					}
+					//if a flag
+					else if((1 - neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0) < bestActionH)){
+//						bestActionH = 1 - neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						System.out.println("Action to evaluate: x=" + flagThisSpot.getPosition().getX() + ", y=" + flagThisSpot.getPosition().getY());
+						Matrix xVector = assignXVector(flagThisSpot, percievedState);
+						double curActionH = 1 - neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						System.out.println("Resulting hypothesis: " + curActionH);
+						if(!baInitialized){
+							bestAction = flagThisSpot;
+							//Matrix yVector = new Matrix(1, 1);
+							bestActionH = curActionH;
+							baInitialized = true;
+						} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
+							bestAction = flagThisSpot;
+							bestActionH = curActionH;
+						}
+					}
+					
+				}
+				else if (percievedState[i][j] == 'f') {
+					Action digAtThisSpot = new Action(new Position(j, i), MoveType.DIG);
+					Matrix selectVector = assignXVector(digAtThisSpot, percievedState);
+					
+//					bestActionH = neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+					System.out.println("Action to evaluate: x=" + digAtThisSpot.getPosition().getX() + ", y=" + digAtThisSpot.getPosition().getY());
+					Matrix xVector = assignXVector(digAtThisSpot, percievedState);
+					double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+					System.out.println("Resulting hypothesis: " + curActionH);
+					if(!baInitialized){
+						bestAction = digAtThisSpot;
+						//Matrix yVector = new Matrix(1, 1);
+						bestActionH = curActionH;
+						baInitialized = true;
+					} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
+						bestAction = digAtThisSpot;
+						bestActionH = curActionH;
+					}
 				}
 			}
 		}
