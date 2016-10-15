@@ -25,6 +25,7 @@ public class AgentNN extends Agent{
 	
 	private DataPersistor xDP;
 	private DataPersistor yDP;
+	private int xStart, xEnd, yStart, yEnd;
 	
 	/**
 	 * Contains a list of paths of past games, the memory of the agent.
@@ -51,6 +52,11 @@ public class AgentNN extends Agent{
 		
 		xDP = new DataPersistor(xFile, 24, 1);
 		yDP = new DataPersistor(yFile, 1, 1);
+		
+		xStart = 0;
+		xEnd = 0;
+		yStart = 0;
+		yEnd = 0;
 	}
 	
 	/**
@@ -101,8 +107,15 @@ public class AgentNN extends Agent{
 	public void train(int iterations) throws IOException{
 		for(int i=0; i<iterations; i++){
 			neuralNetwork.gradientDescent(xVectors, yVectors);
-			xDP.writeData(xVectors);
-			yDP.writeData(yVectors);
+			
+			xEnd += xVectors.size() - xEnd;
+			xDP.writeData(xVectors, xStart, xEnd);
+			xStart = xEnd;
+			
+			yEnd += yVectors.size() - yEnd;
+			yDP.writeData(yVectors, yStart, yEnd);
+			yStart += yEnd;
+
 		}
 	}
 	

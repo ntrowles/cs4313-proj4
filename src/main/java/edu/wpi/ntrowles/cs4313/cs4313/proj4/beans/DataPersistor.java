@@ -41,9 +41,9 @@ public class DataPersistor {
 	
 	public void writeData(ArrayList<Matrix> inputList, int begin, int end) throws IOException{
 		//TODO writing an ArrayList<Matrix> to a file
-		for(int i = begin - 1; i < end; i++){
-			for(int y = 0; y < xLength; y++){
-				for(int x = 0; x < yLength; x++){
+		for(int i = begin; i < end; i++){
+			for(int y = 0; y < yLength; y++){
+				for(int x = 0; x < xLength; x++){
 					double val = inputList.get(i).get(y, x);
 					fileWriter.write(val + " ");
 				}
