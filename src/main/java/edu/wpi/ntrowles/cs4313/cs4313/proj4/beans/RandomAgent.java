@@ -33,7 +33,6 @@ public class RandomAgent extends Agent{
 	 */
 	public RandomAgent(){
 		this(new ArrayList<Path>());
-		neuralNetwork = new Network();
 		xVectors = new ArrayList<Matrix>();
 		yVectors = new ArrayList<Matrix>();
 	}
@@ -44,7 +43,6 @@ public class RandomAgent extends Agent{
 	 */
 	public RandomAgent(List<Path> history){
 		this.history = history;
-		this.neuralNetwork = new Network();
 	}
 	
 	public Action selectAction(State curState){
@@ -53,23 +51,26 @@ public class RandomAgent extends Agent{
 		char[][] percievedState = curState.percieve();
 		
 		List<Action> validActions = new ArrayList<Action>();
-		Action bestAction = new Action();
 		//Add all valid actions, DIG and FLAG type actions.
 		for(int i=0; i<percievedState.length; i++){
 			for(int j=0; j<percievedState[0].length; j++){
 				if(percievedState[i][j] == 'h'){
-					int actionSelector = 1 + (int)(Math.random() * 2);
-					Action curAction = new Action(new Position(j, i), MoveType.DIG);
-					System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
-					Matrix xVector = assignXVector(curAction, percievedState);
-					double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
-					System.out.println("Resulting hypothesis: " + curActionH);
+					Action flagAction = new Action(new Position(j, i), MoveType.FLAG);
+					Action digAction = new Action(new Position(j, i), MoveType.DIG);
+					validActions.add(flagAction);
+					validActions.add(digAction);
+				}
+				else if(percievedState[i][j] == 'h' && percievedState[i][j] == 'f'){
+					Action digAction = new Action(new Position(j, i), MoveType.DIG);
+					validActions.add(digAction);
 				}
 			}
 		}
 		
+		int ActionSelector = (int)(Math.random() * validActions.size());
+		Action selectedAction = validActions.get(ActionSelector);
 		//select best actions based on function
-		return bestAction;
+		return selectedAction;
 	}
 	
 	public void train(int iterations){
