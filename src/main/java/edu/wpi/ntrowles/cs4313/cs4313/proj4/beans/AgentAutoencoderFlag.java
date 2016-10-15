@@ -1,7 +1,5 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,16 +13,10 @@ import edu.wpi.ntrowles.cs4313.cs4313.proj4.network.Network;
  * @author bgsarkis
  *
  */
-public class AgentNN extends Agent{
+public class AgentAutoencoderFlag extends Agent{
 	private Network neuralNetwork;
 	private ArrayList<Matrix> xVectors;
 	private ArrayList<Matrix> yVectors;
-	
-	private File xFile;
-	private File yFile; 
-	
-	private DataPersistor xDP;
-	private DataPersistor yDP;
 	
 	/**
 	 * Contains a list of paths of past games, the memory of the agent.
@@ -38,29 +30,44 @@ public class AgentNN extends Agent{
 	
 	/**
 	 * Default agent constructor, creates a new path collection.
-	 * @throws IOException 
 	 */
-	public AgentNN() throws IOException{
+	public AgentAutoencoderFlag(){
 		this(new ArrayList<Path>());
 		neuralNetwork = new Network();
 		xVectors = new ArrayList<Matrix>();
 		yVectors = new ArrayList<Matrix>();
-		
-		xFile = new File("xVectorData.txt");
-		yFile = new File("yVectorData.txt");
-		
-		xDP = new DataPersistor(xFile, 1, 24);
-		yDP = new DataPersistor(yFile, 1, 1);
 	}
 	
 	/**
 	 * Overloaded agent constructor, takes in a history of past games.
 	 * @param history The playing history of the agent.
 	 */
-	public AgentNN(List<Path> history){
+	public AgentAutoencoderFlag(List<Path> history){
 		this.history = history;
 		this.neuralNetwork = new Network();
 	}
+	
+	public void train(int iterations){
+		// ArrayList of integers
+		ArrayList<Integer> layerNum = new ArrayList<Integer>();
+		layerNum.add(xVectors.get(0).getRowDimension());
+		layerNum.add(xVectors.get(0).getRowDimension()*3/8);
+		layerNum.add(xVectors.get(0).getRowDimension());
+		Network autoEncoderNet = new Network(3, layerNum);
+		
+		
+		for(int i = 0; i < iterations; i++){
+			autoEncoderNet.gradientDescent(xVectors, xVectors);
+		}
+		
+		neuralNetwork = new Network();
+		neuralNetwork.setThetas(autoEncoderNet.getThetas(), 0);
+		
+		for(int i = 0; i < iterations; i++){
+			autoEncoderNet.gradientDescent(xVectors, xVectors);
+		}
+	}
+	
 	
 	public Action selectAction(State curState){
 		System.out.println("Selecting action");
@@ -71,40 +78,78 @@ public class AgentNN extends Agent{
 		Action bestAction = new Action();
 		double bestActionH = 1;
 		boolean baInitialized = false;
+		
 		//Add all valid actions, DIG and FLAG type actions.
 		//TODO for now, I am only worried about digging actions, will add flagging actions later
 		for(int i=0; i<percievedState.length; i++){
 			for(int j=0; j<percievedState[0].length; j++){
 				if(percievedState[i][j] == 'h'){
-					Action curAction = new Action(new Position(j, i), MoveType.DIG);
-					System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
-					Matrix xVector = assignXVector(curAction, percievedState);
+					//Now we determine the difference between 0 or 1.  Pick the action that minimizes the difference
+					
+					Action digAtThisSpot = new Action(new Position(j, i), MoveType.DIG);
+					Action flagThisSpot = new Action(new Position(j, i), MoveType.FLAG);
+					Matrix selectVector = assignXVector(digAtThisSpot, percievedState);
+					//if a dig 	
+					if(neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0) < bestActionH){
+//						bestActionH = neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						System.out.println("Action to evaluate: x=" + digAtThisSpot.getPosition().getX() + ", y=" + digAtThisSpot.getPosition().getY());
+						Matrix xVector = assignXVector(digAtThisSpot, percievedState);
+						double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						System.out.println("Resulting hypothesis: " + curActionH);
+						if(!baInitialized){
+							bestAction = digAtThisSpot;
+							//Matrix yVector = new Matrix(1, 1);
+							bestActionH = curActionH;
+							baInitialized = true;
+						} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
+							bestAction = digAtThisSpot;
+							bestActionH = curActionH;
+						}
+						
+					}
+					//if a flag
+					else if((1 - neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0) < bestActionH)){
+//						bestActionH = 1 - neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						System.out.println("Action to evaluate: x=" + flagThisSpot.getPosition().getX() + ", y=" + flagThisSpot.getPosition().getY());
+						Matrix xVector = assignXVector(flagThisSpot, percievedState);
+						double curActionH = 1 - neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+						System.out.println("Resulting hypothesis: " + curActionH);
+						if(!baInitialized){
+							bestAction = flagThisSpot;
+							//Matrix yVector = new Matrix(1, 1);
+							bestActionH = curActionH;
+							baInitialized = true;
+						} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
+							bestAction = flagThisSpot;
+							bestActionH = curActionH;
+						}
+					}
+					
+				}
+				else if (percievedState[i][j] == 'f') {
+					Action digAtThisSpot = new Action(new Position(j, i), MoveType.DIG);
+					Matrix selectVector = assignXVector(digAtThisSpot, percievedState);
+					
+//					bestActionH = neuralNetwork.forwardPropogate(selectVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+					System.out.println("Action to evaluate: x=" + digAtThisSpot.getPosition().getX() + ", y=" + digAtThisSpot.getPosition().getY());
+					Matrix xVector = assignXVector(digAtThisSpot, percievedState);
 					double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
 					System.out.println("Resulting hypothesis: " + curActionH);
 					if(!baInitialized){
-						bestAction = curAction;
+						bestAction = digAtThisSpot;
 						//Matrix yVector = new Matrix(1, 1);
 						bestActionH = curActionH;
 						baInitialized = true;
 					} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
-						bestAction = curAction;
+						bestAction = digAtThisSpot;
 						bestActionH = curActionH;
 					}
 				}
 			}
 		}
-		
 		//select best actions based on function
 		return bestAction;
-	}
-	
-	public void train(int iterations) throws IOException{
-		for(int i=0; i<iterations; i++){
-			neuralNetwork.gradientDescent(xVectors, yVectors);
-			xDP.writeData(xVectors);
-			yDP.writeData(yVectors);
-		}
-	}
+	}	
 	
 	public Matrix assignXVector(Action action, char[][] percievedState){
 		Matrix xVector = new Matrix(24,1);
@@ -150,11 +195,6 @@ public class AgentNN extends Agent{
 		yVectors.add(yVector);
 	}
 	
-	public void stopRecording() throws IOException{
-		xDP.closeFile();
-		yDP.closeFile();
-	}
-	
 	public void newGameInit(){
 		//TODO holy shit this is the last thing on my priority list
 	}
@@ -163,3 +203,4 @@ public class AgentNN extends Agent{
 	
 	
 }
+
