@@ -37,4 +37,16 @@ public class DataGenerator {
 		return dataset;
 	}
 	
+	public void printVectors(ArrayList<Matrix> inputMatrix, String vectorName, int yLength, int xLength){
+		for(int i = 0; i < inputMatrix.size(); i++){
+			System.out.println(vectorName + ": ");
+			for(int y = 0; y < yLength; y++){
+				for(int x = 0; x < xLength; x++){
+					System.out.print(inputMatrix.get(i).get(y, x) + "\t");
+				}
+				System.out.println("");
+			}
+		}
+	}
+	
 }

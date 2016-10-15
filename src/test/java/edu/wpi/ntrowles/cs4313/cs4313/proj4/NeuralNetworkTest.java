@@ -56,6 +56,9 @@ public class NeuralNetworkTest {
 		}
 		System.out.println("Training Set\nNumber Correct: " + numCorrectTrainingSet + "\nTotal training set size");
 		
+		generator.printVectors(xVectorsTotal, "xVectors", 24, 1);
+		generator.printVectors(yVectorsTotal, "yVectors", 1, 1);
+		
 		//test set accuracy
 		for(int i=0; i<xVectorsTest.size(); i++){
 			
