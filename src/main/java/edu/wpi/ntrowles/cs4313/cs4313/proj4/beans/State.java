@@ -401,7 +401,7 @@ public class State {
 	public Matrix peek(int row, int column){
 		Matrix yVector = new Matrix(1,1);
 		double value = minesweeperBoard[row][column].isBomb() ? 1 : 0;//actual result
-		yVector.set(1, 1, value);
+		yVector.set(0, 0, value);
 		return yVector;
 	}
 }
