@@ -72,9 +72,9 @@ public class RandomAgent extends Agent{
 		for(int i=0; i<percievedState.length; i++){
 			for(int j=0; j<percievedState[0].length; j++){
 				if(percievedState[i][j] == 'h'){
-					Action flagAction = new Action(new Position(j, i), MoveType.FLAG);
+					//Action flagAction = new Action(new Position(j, i), MoveType.FLAG);
 					Action digAction = new Action(new Position(j, i), MoveType.DIG);
-					validActions.add(flagAction);
+					//validActions.add(flagAction);
 					validActions.add(digAction);
 				}
 				else if(percievedState[i][j] == 'f'){

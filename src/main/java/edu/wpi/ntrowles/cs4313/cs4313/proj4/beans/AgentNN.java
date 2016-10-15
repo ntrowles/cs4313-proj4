@@ -59,6 +59,22 @@ public class AgentNN extends Agent{
 		yEnd = 0;
 	}
 	
+	public ArrayList<Matrix> getxVectors() {
+		return xVectors;
+	}
+
+	public void setxVectors(ArrayList<Matrix> xVectors) {
+		this.xVectors = xVectors;
+	}
+
+	public ArrayList<Matrix> getyVectors() {
+		return yVectors;
+	}
+
+	public void setyVectors(ArrayList<Matrix> yVectors) {
+		this.yVectors = yVectors;
+	}
+
 	/**
 	 * Overloaded agent constructor, takes in a history of past games.
 	 * @param history The playing history of the agent.
