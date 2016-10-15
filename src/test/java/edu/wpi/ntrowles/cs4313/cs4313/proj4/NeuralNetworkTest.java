@@ -31,8 +31,8 @@ public class NeuralNetworkTest {
 		xVectorsTraining.addAll(xVectorsTotal.subList(0, (int)(0.75*xVectorsTotal.size())));
 		yVectorsTraining.addAll(yVectorsTotal.subList(0, (int)(0.75*yVectorsTotal.size())));
 		
-		xVectorsTest.addAll(xVectorsTotal.subList((int)(0.75*xVectorsTotal.size()+1), xVectorsTotal.size()));
-		yVectorsTest.addAll(yVectorsTotal.subList((int)(0.75*yVectorsTotal.size()+1), yVectorsTotal.size()));
+		xVectorsTest.addAll(xVectorsTotal.subList((int)(0.75*xVectorsTotal.size()), xVectorsTotal.size()));
+		yVectorsTest.addAll(yVectorsTotal.subList((int)(0.75*yVectorsTotal.size()), yVectorsTotal.size()));
 		
 		for(int i=0; i<100; i++){
 			network.gradientDescent(xVectorsTraining, yVectorsTraining);
@@ -54,7 +54,7 @@ public class NeuralNetworkTest {
 				}
 			}
 		}
-		System.out.println("Training Set\nNumber Correct: " + numCorrectTrainingSet + "\nTotal training set size");
+		System.out.println("Training Set\nNumber Correct: " + numCorrectTrainingSet + "\nTotal training set size: " + trainingSetSize);
 		
 		//test set accuracy
 		for(int i=0; i<xVectorsTest.size(); i++){

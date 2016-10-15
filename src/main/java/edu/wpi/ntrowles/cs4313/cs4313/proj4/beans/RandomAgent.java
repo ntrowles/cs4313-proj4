@@ -153,7 +153,7 @@ public class RandomAgent extends Agent{
 				Action curAction = new Action(new Position(j, i), MoveType.DIG);
 //				System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
 				Matrix xVector = assignXVector(curAction, percievedState);
-				double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+//				double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
 //				System.out.println("Resulting hypothesis: " + curActionH);
 				//peek row, column
 				Matrix yVector = state.peek(i, j);

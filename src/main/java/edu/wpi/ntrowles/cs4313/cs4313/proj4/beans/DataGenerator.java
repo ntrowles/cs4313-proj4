@@ -25,7 +25,8 @@ public class DataGenerator {
 		int count = 0;
 		while(count<numPairs){
 			ArrayList<ArrayList<Matrix>> curStateTraining = agent.createTrainingData(curState);
-			dataset.addAll(curStateTraining);
+			xVectors.addAll(curStateTraining.get(0));
+			yVectors.addAll(curStateTraining.get(1));
 			
 			count += curStateTraining.size();
 			
