@@ -16,7 +16,7 @@ public class NeuralNetworkTest {
 		Network network = new Network();
 		DataGenerator generator = new DataGenerator();
 		
-		ArrayList<ArrayList<Matrix>> dataSet = generator.generateDataPairs(50000);
+		ArrayList<ArrayList<Matrix>> dataSet = generator.generateDataPairs(10000);
 		
 		ArrayList<Matrix> xVectorsTotal = dataSet.get(0);
 		ArrayList<Matrix> yVectorsTotal = dataSet.get(1);

@@ -174,7 +174,7 @@ public class Network {
 		
 		ArrayList<Matrix> partialDerivatives = new ArrayList<Matrix>();
 		for(int i=0; i<DeltaList.size(); i++){
-			Matrix partialDerivative = DeltaList.get(i).times(1.0/xVectors.size());
+			Matrix partialDerivative = DeltaList.get(i).times(1.0/xVectors.size()).plus(Thetas.get(i).times(0.05));
 			partialDerivatives.add(partialDerivative);
 		}
 		

@@ -1,5 +1,6 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -9,10 +10,11 @@ import Jama.Matrix;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.AgentNN;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.DataGenerator;
+import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.DataPersistor;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.State;
 
 public class AgentNNTest {
-//
+
 //	@Test
 //	public void agentTestRun() throws IOException{
 //		boolean continuePlaying = true;
@@ -99,7 +101,7 @@ public class AgentNNTest {
 //			System.out.println("Avg: " + sum/gameScoreSet.get(i).length + " | " + printArray(gameScoreSet.get(i)));
 //		}
 //	}
-//	
+	
 	
 	public static String print2DArray(char[][] arr){
 		StringBuilder b = new StringBuilder();
@@ -152,13 +154,21 @@ public class AgentNNTest {
 		yVectorsTest.addAll(yVectorsTotal.subList((int)(0.75*yVectorsTotal.size()), yVectorsTotal.size()));
 		
 		
+		File xVecFile = new File("xVectorsRandom.txt");
+		File yVecFile = new File("yVectorsRandom.txt");
+		DataPersistor xVecDp = new DataPersistor(xVecFile, 24, 1);
+		DataPersistor yVecDp = new DataPersistor(yVecFile, 1, 1);
 		
+		xVecDp.writeData(xVectorsTotal);
+		yVecDp.writeData(yVectorsTotal);
+		
+		xVecDp.closeFile();
+		yVecDp.closeFile();
 		
 		AgentNN agent = new AgentNN();
 		agent.setxVectors(xVectorsTotal);
 		agent.setyVectors(yVectorsTotal);
 		State curState = new State();
-
 		
 		
 		agent.train(100);
