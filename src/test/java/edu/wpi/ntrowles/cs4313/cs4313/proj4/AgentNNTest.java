@@ -1,5 +1,6 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -10,7 +11,7 @@ import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.State;
 
 public class AgentNNTest {
 	@Test
-	public void agentTestRun(){
+	public void agentTestRun() throws IOException{
 		boolean continuePlaying = true;
 		boolean newGame = true;
 		int numGames = 0;

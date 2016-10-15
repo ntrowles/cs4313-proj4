@@ -1,5 +1,7 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,12 @@ public class AgentNN extends Agent{
 	private ArrayList<Matrix> xVectors;
 	private ArrayList<Matrix> yVectors;
 	
+	private File xFile;
+	private File yFile; 
+	
+	private DataPersistor xDP;
+	private DataPersistor yDP;
+	
 	/**
 	 * Contains a list of paths of past games, the memory of the agent.
 	 */
@@ -30,12 +38,19 @@ public class AgentNN extends Agent{
 	
 	/**
 	 * Default agent constructor, creates a new path collection.
+	 * @throws IOException 
 	 */
-	public AgentNN(){
+	public AgentNN() throws IOException{
 		this(new ArrayList<Path>());
 		neuralNetwork = new Network();
 		xVectors = new ArrayList<Matrix>();
 		yVectors = new ArrayList<Matrix>();
+		
+		xFile = new File("xVectorData.txt");
+		yFile = new File("yVectorData.txt");
+		
+		xDP = new DataPersistor(xFile, 1, 24);
+		yDP = new DataPersistor(yFile, 1, 1);
 	}
 	
 	/**
@@ -83,9 +98,11 @@ public class AgentNN extends Agent{
 		return bestAction;
 	}
 	
-	public void train(int iterations){
+	public void train(int iterations) throws IOException{
 		for(int i=0; i<iterations; i++){
 			neuralNetwork.gradientDescent(xVectors, yVectors);
+			xDP.writeData(xVectors);
+			yDP.writeData(yVectors);
 		}
 	}
 	
@@ -131,6 +148,11 @@ public class AgentNN extends Agent{
 		//1 is bomb, 0 is non-bomb
 		yVector.set(0, 0, (newState.percieve()[action.getPosition().getY()][action.getPosition().getX()] == 'b') ? 1 : 0);
 		yVectors.add(yVector);
+	}
+	
+	public void stopRecording() throws IOException{
+		xDP.closeFile();
+		yDP.closeFile();
 	}
 	
 	public void newGameInit(){

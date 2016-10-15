@@ -1,5 +1,6 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -12,7 +13,7 @@ import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.State;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		/**
 		 * Initialize State, Agent, and flags
 		 */
@@ -103,8 +104,9 @@ public class Main {
 				gameScoreSet.add(curGameScores);
 				curGameScores = new double[50];
 				agent.train(20);
-				//continuePlaying = false;
-			} else if(numGames == 100){
+				//continuePlaying = false; 
+			} else if(numGames == 50){
+				agent.stopRecording();
 				continuePlaying = false;
 			}
 		}
