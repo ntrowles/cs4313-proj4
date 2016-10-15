@@ -18,10 +18,7 @@ public class DataGenerator {
 		
 		State curState = new State();
 		AgentNN agent = new AgentNN();
-		
-		
-		
-		boolean newGame = true;
+
 		//loop through and generate numPairs
 		int count = 0;
 		while(count<numPairs){
@@ -33,7 +30,8 @@ public class DataGenerator {
 		}
 		
 		
-		
+		dataset.add(xVectors);
+		dataset.add(yVectors);
 		return dataset;
 	}
 }
