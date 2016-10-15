@@ -1,5 +1,6 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -11,13 +12,16 @@ import edu.wpi.ntrowles.cs4313.cs4313.proj4.network.Network;
 public class NeuralNetworkTest {
 	
 	@Test
-	public void nnTest(){
+	public void nnTest() throws IOException{
 		Network network = new Network();
 		DataGenerator generator = new DataGenerator();
+		
 		ArrayList<ArrayList<Matrix>> dataSet = generator.generateDataPairs(1000);
 		
 		ArrayList<Matrix> xVectorsTotal = dataSet.get(0);
 		ArrayList<Matrix> yVectorsTotal = dataSet.get(1);
+		
+		
 		
 		ArrayList<Matrix> xVectorsTraining = new ArrayList<Matrix>();
 		ArrayList<Matrix> xVectorsTest = new ArrayList<Matrix>();
