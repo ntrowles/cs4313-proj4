@@ -1,24 +1,23 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Test;
 
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
-import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.AgentNN;
+import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.AgentAutoencoderFlag;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.State;
 
-public class AgentNNTest {
+public class AgentAutoencoderFlagTest {
 	@Test
-	public void agentTestRun() throws IOException{
+	public void agentTestRun(){
 		boolean continuePlaying = true;
 		boolean newGame = true;
 		int numGames = 0;
 		ArrayList<double[]> gameScoreSet = new ArrayList<double[]>();
 		double[] curGameScores = new double[50];
 		
-		AgentNN agent = new AgentNN();
+		AgentAutoencoderFlag agent = new AgentAutoencoderFlag();
 		State curState = new State();
 
 		/**
@@ -121,3 +120,4 @@ public class AgentNNTest {
 	}
 	
 }
+

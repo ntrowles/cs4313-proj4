@@ -1,7 +1,5 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,16 +13,10 @@ import edu.wpi.ntrowles.cs4313.cs4313.proj4.network.Network;
  * @author bgsarkis
  *
  */
-public class AgentNN extends Agent{
+public class RandomAgent extends Agent{
 	private Network neuralNetwork;
 	private ArrayList<Matrix> xVectors;
 	private ArrayList<Matrix> yVectors;
-	
-	private File xFile;
-	private File yFile; 
-	
-	private DataPersistor xDP;
-	private DataPersistor yDP;
 	
 	/**
 	 * Contains a list of paths of past games, the memory of the agent.
@@ -38,28 +30,19 @@ public class AgentNN extends Agent{
 	
 	/**
 	 * Default agent constructor, creates a new path collection.
-	 * @throws IOException 
 	 */
-	public AgentNN() throws IOException{
+	public RandomAgent(){
 		this(new ArrayList<Path>());
-		neuralNetwork = new Network();
 		xVectors = new ArrayList<Matrix>();
 		yVectors = new ArrayList<Matrix>();
-		
-		xFile = new File("xVectorData.txt");
-		yFile = new File("yVectorData.txt");
-		
-		xDP = new DataPersistor(xFile, 24, 1);
-		yDP = new DataPersistor(yFile, 1, 1);
 	}
 	
 	/**
 	 * Overloaded agent constructor, takes in a history of past games.
 	 * @param history The playing history of the agent.
 	 */
-	public AgentNN(List<Path> history){
+	public RandomAgent(List<Path> history){
 		this.history = history;
-		this.neuralNetwork = new Network();
 	}
 	
 	public Action selectAction(State curState){
@@ -68,42 +51,30 @@ public class AgentNN extends Agent{
 		char[][] percievedState = curState.percieve();
 		
 		List<Action> validActions = new ArrayList<Action>();
-		Action bestAction = new Action();
-		double bestActionH = 1;
-		boolean baInitialized = false;
 		//Add all valid actions, DIG and FLAG type actions.
-		//TODO for now, I am only worried about digging actions, will add flagging actions later
 		for(int i=0; i<percievedState.length; i++){
 			for(int j=0; j<percievedState[0].length; j++){
 				if(percievedState[i][j] == 'h'){
-					Action curAction = new Action(new Position(j, i), MoveType.DIG);
-					System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
-					Matrix xVector = assignXVector(curAction, percievedState);
-					double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
-					System.out.println("Resulting hypothesis: " + curActionH);
-					if(!baInitialized){
-						bestAction = curAction;
-						//Matrix yVector = new Matrix(1, 1);
-						bestActionH = curActionH;
-						baInitialized = true;
-					} else if(curActionH < bestActionH){ //trying to minimize hypothesis, as (h(x) = 0) => no-bomb
-						bestAction = curAction;
-						bestActionH = curActionH;
-					}
+					Action flagAction = new Action(new Position(j, i), MoveType.FLAG);
+					Action digAction = new Action(new Position(j, i), MoveType.DIG);
+					validActions.add(flagAction);
+					validActions.add(digAction);
+				}
+				else if(percievedState[i][j] == 'f'){
+					Action digAction = new Action(new Position(j, i), MoveType.DIG);
+					validActions.add(digAction);
 				}
 			}
 		}
 		
+		int ActionSelector = (int)(Math.random() * validActions.size());
+		Action selectedAction = validActions.get(ActionSelector);
 		//select best actions based on function
-		return bestAction;
+		return selectedAction;
 	}
 	
-	public void train(int iterations) throws IOException{
-		for(int i=0; i<iterations; i++){
-			neuralNetwork.gradientDescent(xVectors, yVectors);
-			xDP.writeData(xVectors);
-			yDP.writeData(yVectors);
-		}
+	public void train(int iterations){
+		//haha funny
 	}
 	
 	public Matrix assignXVector(Action action, char[][] percievedState){
@@ -149,17 +120,6 @@ public class AgentNN extends Agent{
 		yVector.set(0, 0, (newState.percieve()[action.getPosition().getY()][action.getPosition().getX()] == 'b') ? 1 : 0);
 		yVectors.add(yVector);
 	}
-	
-	public void stopRecording() throws IOException{
-		xDP.closeFile();
-		yDP.closeFile();
-	}
-	
-	public void newGameInit(){
-		//TODO holy shit this is the last thing on my priority list
-	}
-	
-	
 	
 	
 }

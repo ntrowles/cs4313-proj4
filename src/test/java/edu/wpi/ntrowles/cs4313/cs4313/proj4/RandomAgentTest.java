@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
-import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.AgentNN;
+import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.RandomAgent;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.State;
 
-public class AgentNNTest {
+public class RandomAgentTest {
 	@Test
 	public void agentTestRun() throws IOException{
 		boolean continuePlaying = true;
@@ -18,7 +18,7 @@ public class AgentNNTest {
 		ArrayList<double[]> gameScoreSet = new ArrayList<double[]>();
 		double[] curGameScores = new double[50];
 		
-		AgentNN agent = new AgentNN();
+		RandomAgent agent = new RandomAgent();
 		State curState = new State();
 
 		/**

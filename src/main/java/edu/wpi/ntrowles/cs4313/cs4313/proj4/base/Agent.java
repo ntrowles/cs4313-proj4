@@ -1,5 +1,6 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4.base;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import Jama.Matrix;
@@ -12,5 +13,5 @@ public abstract class Agent {
 	
 	public abstract Action selectAction(State state);
 	public abstract void updateHistory(Action action, State oldState, State newState);
-	public abstract void train (int iterations);
+	public abstract void train (int iterations) throws IOException;
 }
