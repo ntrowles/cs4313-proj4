@@ -137,7 +137,23 @@ public class AgentNN extends Agent{
 		//TODO holy shit this is the last thing on my priority list
 	}
 	
-	
+	public ArrayList<ArrayList<Matrix>> createTrainingData(State state){
+		ArrayList<ArrayList<Matrix>> stateTrainingData = new ArrayList<ArrayList<Matrix>>();
+		char[][] percievedState = state.percieve();
+		for(int i=0; i<percievedState.length; i++){
+			for(int j=0; j<percievedState[0].length; j++){
+				Action curAction = new Action(new Position(j, i), MoveType.DIG);
+//				System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
+				Matrix xVector = assignXVector(curAction, percievedState);
+				double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+//				System.out.println("Resulting hypothesis: " + curActionH);
+				//peek row, column
+				Matrix yVector = state.peek(i, j);
+			}
+		}
+		
+		return stateTrainingData;
+	}
 	
 	
 }
