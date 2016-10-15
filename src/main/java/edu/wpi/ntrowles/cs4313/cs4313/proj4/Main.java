@@ -105,7 +105,7 @@ public class Main {
 				curGameScores = new double[50];
 				agent.train(20);
 				//continuePlaying = false; 
-			} else if(numGames == 50){
+			} else if(numGames == 100){
 				agent.stopRecording();
 				continuePlaying = false;
 			}

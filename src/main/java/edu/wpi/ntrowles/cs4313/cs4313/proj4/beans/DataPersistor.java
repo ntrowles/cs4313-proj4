@@ -19,7 +19,7 @@ public class DataPersistor {
 	private ArrayList<Matrix> outputList;
 	private int xLength, yLength;
 	
-	public DataPersistor(File f, int xl, int yl) throws IOException{
+	public DataPersistor(File f, int yl, int xl) throws IOException{
 		this.file = f;
 		this.fileWriter = new FileWriter(f);
 		this.outputList = new ArrayList<Matrix>();

@@ -49,7 +49,7 @@ public class AgentNN extends Agent{
 		xFile = new File("xVectorData.txt");
 		yFile = new File("yVectorData.txt");
 		
-		xDP = new DataPersistor(xFile, 1, 24);
+		xDP = new DataPersistor(xFile, 24, 1);
 		yDP = new DataPersistor(yFile, 1, 1);
 	}
 	
