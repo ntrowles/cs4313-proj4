@@ -26,7 +26,13 @@ public class DataGenerator {
 		int count = 0;
 		while(count<numPairs){
 			ArrayList<ArrayList<Matrix>> curStateTraining = agent.createTrainingData(curState);
+			dataset.addAll(curStateTraining);
+			
+			count += curStateTraining.size();
+			
 		}
+		
+		
 		
 		return dataset;
 	}

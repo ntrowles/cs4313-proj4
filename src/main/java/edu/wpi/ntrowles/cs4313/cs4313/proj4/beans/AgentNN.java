@@ -139,6 +139,11 @@ public class AgentNN extends Agent{
 	
 	public ArrayList<ArrayList<Matrix>> createTrainingData(State state){
 		ArrayList<ArrayList<Matrix>> stateTrainingData = new ArrayList<ArrayList<Matrix>>();
+		
+		ArrayList<Matrix> xVectors = new ArrayList<Matrix>();
+		ArrayList<Matrix> yVectors = new ArrayList<Matrix>();
+		
+		
 		char[][] percievedState = state.percieve();
 		for(int i=0; i<percievedState.length; i++){
 			for(int j=0; j<percievedState[0].length; j++){
@@ -149,9 +154,16 @@ public class AgentNN extends Agent{
 //				System.out.println("Resulting hypothesis: " + curActionH);
 				//peek row, column
 				Matrix yVector = state.peek(i, j);
+				
+				//add vectors to respective sets
+				xVectors.add(xVector);
+				yVectors.add(yVector);
+				
 			}
 		}
 		
+		stateTrainingData.add(xVectors);
+		stateTrainingData.add(yVectors);
 		return stateTrainingData;
 	}
 	
