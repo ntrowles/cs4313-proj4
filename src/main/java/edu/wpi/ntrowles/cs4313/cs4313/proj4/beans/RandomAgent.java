@@ -60,7 +60,7 @@ public class RandomAgent extends Agent{
 					validActions.add(flagAction);
 					validActions.add(digAction);
 				}
-				else if(percievedState[i][j] == 'h' && percievedState[i][j] == 'f'){
+				else if(percievedState[i][j] == 'f'){
 					Action digAction = new Action(new Position(j, i), MoveType.DIG);
 					validActions.add(digAction);
 				}
