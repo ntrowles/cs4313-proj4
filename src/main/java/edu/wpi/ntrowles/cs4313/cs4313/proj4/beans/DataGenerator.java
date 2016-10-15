@@ -1,0 +1,40 @@
+package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import Jama.Matrix;
+import edu.wpi.ntrowles.cs4313.cs4313.proj4.base.Agent;
+
+public class DataGenerator {
+	public DataGenerator(){
+		//intentionally left blank
+	}
+
+	public ArrayList<ArrayList<Matrix>> generateDataPairs(int numPairs) throws IOException{
+		//dataset; contains 2 lists of matrices (xVectors, yVectors)
+		ArrayList<ArrayList<Matrix>> dataset = new ArrayList<ArrayList<Matrix>>();
+		
+		ArrayList<Matrix> xVectors = new ArrayList<Matrix>();
+		ArrayList<Matrix> yVectors = new ArrayList<Matrix>();
+		
+		State curState = new State();
+		RandomAgent agent = new RandomAgent();
+
+		//loop through and generate numPairs
+		int count = 0;
+		while(count<numPairs){
+			ArrayList<ArrayList<Matrix>> curStateTraining = agent.createTrainingData(curState);
+			dataset.addAll(curStateTraining);
+			
+			count += curStateTraining.size();
+			
+		}
+		
+		
+		dataset.add(xVectors);
+		dataset.add(yVectors);
+		return dataset;
+	}
+	
+}
