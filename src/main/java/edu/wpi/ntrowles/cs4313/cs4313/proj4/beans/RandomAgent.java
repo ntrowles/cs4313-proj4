@@ -63,7 +63,7 @@ public class RandomAgent extends Agent{
 	}
 	
 	public Action selectAction(State curState){
-		System.out.println("Selecting action");
+//		System.out.println("Selecting action");
 		
 		char[][] percievedState = curState.percieve();
 		

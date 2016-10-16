@@ -30,9 +30,9 @@ public class DataGenerator {
 			if(newGame){
 				curState = new State();
 				
-				System.out.println(curState.toString());
-				System.out.println(print2DArray(curState.percieve()));
-				System.out.println(curState.getScore());
+//				System.out.println(curState.toString());
+//				System.out.println(print2DArray(curState.percieve()));
+//				System.out.println(curState.getScore());
 				
 				newGame = false;
 				skipState = true;
@@ -44,17 +44,17 @@ public class DataGenerator {
 				
 				count += curStateTraining.get(0).size();
 				
-				System.out.println("xVectors size: " + xVectors.size() + ", yVectors size: " + yVectors.size());
-				System.out.println("count: " + count);
+//				System.out.println("xVectors size: " + xVectors.size() + ", yVectors size: " + yVectors.size());
+//				System.out.println("count: " + count);
 				
 				
 			}
 			skipState = false;
 			
 			curState = curState.nextState(agent.selectAction(curState));
-			System.out.println(curState.toString());
-			System.out.println(print2DArray(curState.percieve()));
-			System.out.println(curState.getScore());
+//			System.out.println(curState.toString());
+//			System.out.println(print2DArray(curState.percieve()));
+//			System.out.println(curState.getScore());
 			
 			if(curState.isTerminal()){
 				newGame = true;
@@ -70,13 +70,13 @@ public class DataGenerator {
 	
 	public void printVectors(ArrayList<Matrix> inputMatrix, String vectorName, int yLength, int xLength){
 		for(int i = 0; i < inputMatrix.size(); i++){
-			System.out.println(vectorName + ": " + i);
+//			System.out.println(vectorName + ": " + i);
 			Matrix curMatrix = inputMatrix.get(i).transpose();
 			for(int y = 0; y < xLength; y++){
 				for(int x = 0; x < yLength; x++){
-					System.out.print(curMatrix.get(y, x) + "\t");
+//					System.out.print(curMatrix.get(y, x) + "\t");
 				}
-				System.out.println("");
+//				System.out.println("");
 			}
 		}
 	}

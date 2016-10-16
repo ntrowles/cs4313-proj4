@@ -10,7 +10,24 @@ public class Network {
 	ArrayList<Integer> numNeurons; // number of neurons at each layer
 	ArrayList<Matrix> Thetas; // weights between each layer
 	double alpha; //learning rate
+	double lambda; //regularization
 	
+	public double getAlpha() {
+		return alpha;
+	}
+
+	public void setAlpha(double alpha) {
+		this.alpha = alpha;
+	}
+
+	public double getLambda() {
+		return lambda;
+	}
+
+	public void setLambda(double lambda) {
+		this.lambda = lambda;
+	}
+
 	public int getNumLayers() {
 		return numLayers;
 	}
@@ -56,16 +73,21 @@ public class Network {
 		numNeurons.add(1);
 		this.numNeurons = numNeurons;
 		this.randRange = 50;
-		this.Thetas = initializeThetas();
 		alpha = 0.05;
+		lambda = 0.1;
+		this.Thetas = initializeThetas();
+
 
 	}
 	
 	public Network(int numLayers, ArrayList<Integer> numNeurons){
 		this.numLayers = numLayers;
 		this.numNeurons = numNeurons;
-		this.Thetas = initializeThetas();
 		this.randRange = 50;
+		alpha = 0.05;
+		lambda = 0.1;
+		this.Thetas = initializeThetas();
+
 	}
 	
 	public Network(int numLayers, ArrayList<Integer> numNeurons, ArrayList<Matrix> initialThetas){
@@ -214,5 +236,13 @@ public class Network {
 			Matrix curTheta = Thetas.get(i);
 			Thetas.set(i, curTheta.minus(DeltaList.get(i).times(alpha)));
 		}
+		
+//		return costFn();
 	}
+	
+//	public costFn(){
+		
+//	}
+	
+	
 }
