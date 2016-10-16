@@ -1,6 +1,8 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
 
 import java.util.ArrayList;
+
+import Jama.Matrix;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Position;
 import edu.wpi.ntrowles.cs4313.cs4313.proj4.beans.Action;
 
@@ -394,5 +396,12 @@ public class State {
 		}
 		
 		return copy;
+	}
+	
+	public Matrix peek(int row, int column){
+		Matrix yVector = new Matrix(1,1);
+		double value = minesweeperBoard[row][column].isBomb() ? 1 : 0;//actual result
+		yVector.set(0, 0, value);
+		return yVector;
 	}
 }

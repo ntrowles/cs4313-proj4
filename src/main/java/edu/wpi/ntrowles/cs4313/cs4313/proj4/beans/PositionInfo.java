@@ -15,6 +15,14 @@ public class PositionInfo {
 		return bomb;
 	}
 
+	public Position getPos() {
+		return pos;
+	}
+
+	public void setPos(Position pos) {
+		this.pos = pos;
+	}
+
 	/**
 	 * Mutates the flag of whether a space has a bomb.
 	 * @param bomb the desired flag setting

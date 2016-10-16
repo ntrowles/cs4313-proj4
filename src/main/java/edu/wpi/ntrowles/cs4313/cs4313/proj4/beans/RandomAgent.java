@@ -1,5 +1,7 @@
 package edu.wpi.ntrowles.cs4313.cs4313.proj4.beans;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,14 @@ public class RandomAgent extends Agent{
 	private ArrayList<Matrix> xVectors;
 	private ArrayList<Matrix> yVectors;
 	
+	
+	private File xFile;
+	private File yFile; 
+	
+	private DataPersistor xDP;
+	private DataPersistor yDP;
+	
+	
 	/**
 	 * Contains a list of paths of past games, the memory of the agent.
 	 */
@@ -30,11 +40,18 @@ public class RandomAgent extends Agent{
 	
 	/**
 	 * Default agent constructor, creates a new path collection.
+	 * @throws IOException 
 	 */
-	public RandomAgent(){
+	public RandomAgent() throws IOException{
 		this(new ArrayList<Path>());
 		xVectors = new ArrayList<Matrix>();
 		yVectors = new ArrayList<Matrix>();
+		
+		xFile = new File("xVectorData.txt");
+		yFile = new File("yVectorData.txt");
+		
+		xDP = new DataPersistor(xFile, 24, 1);
+		yDP = new DataPersistor(yFile, 1, 1);
 	}
 	
 	/**
@@ -46,7 +63,7 @@ public class RandomAgent extends Agent{
 	}
 	
 	public Action selectAction(State curState){
-		System.out.println("Selecting action");
+//		System.out.println("Selecting action");
 		
 		char[][] percievedState = curState.percieve();
 		
@@ -55,9 +72,9 @@ public class RandomAgent extends Agent{
 		for(int i=0; i<percievedState.length; i++){
 			for(int j=0; j<percievedState[0].length; j++){
 				if(percievedState[i][j] == 'h'){
-					Action flagAction = new Action(new Position(j, i), MoveType.FLAG);
+					//Action flagAction = new Action(new Position(j, i), MoveType.FLAG);
 					Action digAction = new Action(new Position(j, i), MoveType.DIG);
-					validActions.add(flagAction);
+					//validActions.add(flagAction);
 					validActions.add(digAction);
 				}
 				else if(percievedState[i][j] == 'f'){
@@ -73,8 +90,10 @@ public class RandomAgent extends Agent{
 		return selectedAction;
 	}
 	
-	public void train(int iterations){
+	public void train(int iterations) throws IOException{
 		//haha funny
+		xDP.writeData(xVectors);
+		yDP.writeData(yVectors);
 	}
 	
 	public Matrix assignXVector(Action action, char[][] percievedState){
@@ -99,6 +118,8 @@ public class RandomAgent extends Agent{
 				} else if(percievedState[curYPosn][curXPosn] >= '0' && percievedState[curYPosn][curXPosn] <= '9'){
 					String s = "" + percievedState[curYPosn][curXPosn];
 					xVector.set(count, 0, Double.parseDouble(s));
+				} else if (percievedState[curYPosn][curXPosn] == 'c') {
+					xVector.set(count, 0, 0.0);
 				} else{
 					xVector.set(count, 0 , -1);
 				}
@@ -121,5 +142,39 @@ public class RandomAgent extends Agent{
 		yVectors.add(yVector);
 	}
 	
+	public ArrayList<ArrayList<Matrix>> createTrainingData(State state){
+		ArrayList<ArrayList<Matrix>> stateTrainingData = new ArrayList<ArrayList<Matrix>>();
+		
+		ArrayList<Matrix> xVectors = new ArrayList<Matrix>();
+		ArrayList<Matrix> yVectors = new ArrayList<Matrix>();
+		
+		
+		char[][] percievedState = state.percieve();
+		for(int i=0; i<percievedState.length; i++){
+			for(int j=0; j<percievedState[0].length; j++){
+				Action curAction = new Action(new Position(j, i), MoveType.DIG);
+//				System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
+				Matrix xVector = assignXVector(curAction, percievedState);
+//				double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+//				System.out.println("Resulting hypothesis: " + curActionH);
+				//peek row, column
+				Matrix yVector = state.peek(i, j);
+				
+				//add vectors to respective sets
+				xVectors.add(xVector);
+				yVectors.add(yVector);
+				
+			}
+		}
+		
+		stateTrainingData.add(xVectors);
+		stateTrainingData.add(yVectors);
+		return stateTrainingData;
+	}
+	
+	public void stopRecording() throws IOException{
+		xDP.closeFile();
+		yDP.closeFile();
+	}
 	
 }

@@ -25,6 +25,7 @@ public class AgentNN extends Agent{
 	
 	private DataPersistor xDP;
 	private DataPersistor yDP;
+	private int xStart, xEnd, yStart, yEnd;
 	
 	/**
 	 * Contains a list of paths of past games, the memory of the agent.
@@ -51,8 +52,29 @@ public class AgentNN extends Agent{
 		
 		xDP = new DataPersistor(xFile, 24, 1);
 		yDP = new DataPersistor(yFile, 1, 1);
+		
+		xStart = 0;
+		xEnd = 0;
+		yStart = 0;
+		yEnd = 0;
 	}
 	
+	public ArrayList<Matrix> getxVectors() {
+		return xVectors;
+	}
+
+	public void setxVectors(ArrayList<Matrix> xVectors) {
+		this.xVectors = xVectors;
+	}
+
+	public ArrayList<Matrix> getyVectors() {
+		return yVectors;
+	}
+
+	public void setyVectors(ArrayList<Matrix> yVectors) {
+		this.yVectors = yVectors;
+	}
+
 	/**
 	 * Overloaded agent constructor, takes in a history of past games.
 	 * @param history The playing history of the agent.
@@ -101,8 +123,15 @@ public class AgentNN extends Agent{
 	public void train(int iterations) throws IOException{
 		for(int i=0; i<iterations; i++){
 			neuralNetwork.gradientDescent(xVectors, yVectors);
-			xDP.writeData(xVectors);
-			yDP.writeData(yVectors);
+			
+			xEnd += xVectors.size() - xEnd;
+			xDP.writeData(xVectors, xStart, xEnd);
+			xStart = xEnd;
+			
+			yEnd += yVectors.size() - yEnd;
+			yDP.writeData(yVectors, yStart, yEnd);
+			yStart += yEnd;
+
 		}
 	}
 	
@@ -125,9 +154,11 @@ public class AgentNN extends Agent{
 					xVector.set(count, 0, -2.0);
 				} else if(percievedState[curYPosn][curXPosn] == 'h' || percievedState[curYPosn][curXPosn] == 'f'){
 					xVector.set(count, 0, -1.0);
-				} else if(percievedState[curYPosn][curXPosn] >= '0' && percievedState[curYPosn][curXPosn] <= '9'){
+				} else if((percievedState[curYPosn][curXPosn] >= '0' && percievedState[curYPosn][curXPosn] <= '9')){
 					String s = "" + percievedState[curYPosn][curXPosn];
 					xVector.set(count, 0, Double.parseDouble(s));
+				} else if (percievedState[curYPosn][curXPosn] == 'c') {
+					xVector.set(count, 0, 0.0);
 				} else{
 					xVector.set(count, 0 , -1);
 				}
@@ -159,6 +190,35 @@ public class AgentNN extends Agent{
 		//TODO holy shit this is the last thing on my priority list
 	}
 	
+	public ArrayList<ArrayList<Matrix>> createTrainingData(State state){
+		ArrayList<ArrayList<Matrix>> stateTrainingData = new ArrayList<ArrayList<Matrix>>();
+		
+		ArrayList<Matrix> xVectors = new ArrayList<Matrix>();
+		ArrayList<Matrix> yVectors = new ArrayList<Matrix>();
+		
+		
+		char[][] percievedState = state.percieve();
+		for(int i=0; i<percievedState.length; i++){
+			for(int j=0; j<percievedState[0].length; j++){
+				Action curAction = new Action(new Position(j, i), MoveType.DIG);
+//				System.out.println("Action to evaluate: x=" + curAction.getPosition().getX() + ", y=" + curAction.getPosition().getY());
+				Matrix xVector = assignXVector(curAction, percievedState);
+				double curActionH = neuralNetwork.forwardPropogate(xVector).get(neuralNetwork.getNumLayers()-1).get(0, 0);
+//				System.out.println("Resulting hypothesis: " + curActionH);
+				//peek row, column
+				Matrix yVector = state.peek(i, j);
+				
+				//add vectors to respective sets
+				xVectors.add(xVector);
+				yVectors.add(yVector);
+				
+			}
+		}
+		
+		stateTrainingData.add(xVectors);
+		stateTrainingData.add(yVectors);
+		return stateTrainingData;
+	}
 	
 	
 	
