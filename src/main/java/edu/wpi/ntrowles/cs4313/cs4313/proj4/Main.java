@@ -22,7 +22,7 @@ public class Main {
 		Tester t = new Tester();
 		
 		DataGenerator generator = new DataGenerator();
-		ArrayList<ArrayList<Matrix>> dataSet = generator.generateDataPairs(200000);
+		ArrayList<ArrayList<Matrix>> dataSet = generator.generateDataPairs(10000);
 		ArrayList<Matrix> xVectors = dataSet.get(0);
 		ArrayList<Matrix> yVectors = dataSet.get(1);
 		
@@ -34,7 +34,8 @@ public class Main {
 		System.out.println("Training Set fScore: " + fScore.get(0) + ", Test set fScore: " + fScore.get(1));
 		
 		//Deep Network
-		Network deepNetwork = new Network();
+		
+		//Network deepNetwork = new Network(list);
 		
 		
 		
