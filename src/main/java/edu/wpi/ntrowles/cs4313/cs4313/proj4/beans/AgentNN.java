@@ -154,9 +154,11 @@ public class AgentNN extends Agent{
 					xVector.set(count, 0, -2.0);
 				} else if(percievedState[curYPosn][curXPosn] == 'h' || percievedState[curYPosn][curXPosn] == 'f'){
 					xVector.set(count, 0, -1.0);
-				} else if(percievedState[curYPosn][curXPosn] >= '0' && percievedState[curYPosn][curXPosn] <= '9'){
+				} else if((percievedState[curYPosn][curXPosn] >= '0' && percievedState[curYPosn][curXPosn] <= '9')){
 					String s = "" + percievedState[curYPosn][curXPosn];
 					xVector.set(count, 0, Double.parseDouble(s));
+				} else if (percievedState[curYPosn][curXPosn] == 'c') {
+					xVector.set(count, 0, 0.0);
 				} else{
 					xVector.set(count, 0 , -1);
 				}

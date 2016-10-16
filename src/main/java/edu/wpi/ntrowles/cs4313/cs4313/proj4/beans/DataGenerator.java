@@ -22,6 +22,7 @@ public class DataGenerator {
 		RandomAgent agent = new RandomAgent();
 		
 		boolean newGame = true;
+		boolean skipState = false;
 
 		//loop through and generate numPairs
 		int count = 0;
@@ -34,16 +35,21 @@ public class DataGenerator {
 				System.out.println(curState.getScore());
 				
 				newGame = false;
+				skipState = true;
 			}
-			
-			ArrayList<ArrayList<Matrix>> curStateTraining = agent.createTrainingData(curState);
-			xVectors.addAll(curStateTraining.get(0));
-			yVectors.addAll(curStateTraining.get(1));
-			
-			count += curStateTraining.get(0).size();
-			
-			System.out.println("xVectors size: " + xVectors.size() + ", yVectors size: " + yVectors.size());
-			System.out.println("count: " + count);
+			if(!skipState){
+				ArrayList<ArrayList<Matrix>> curStateTraining = agent.createTrainingData(curState);
+				xVectors.addAll(curStateTraining.get(0));
+				yVectors.addAll(curStateTraining.get(1));
+				
+				count += curStateTraining.get(0).size();
+				
+				System.out.println("xVectors size: " + xVectors.size() + ", yVectors size: " + yVectors.size());
+				System.out.println("count: " + count);
+				
+				
+			}
+			skipState = false;
 			
 			curState = curState.nextState(agent.selectAction(curState));
 			System.out.println(curState.toString());
@@ -53,6 +59,7 @@ public class DataGenerator {
 			if(curState.isTerminal()){
 				newGame = true;
 			}
+			
 		}
 		
 		

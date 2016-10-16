@@ -44,6 +44,10 @@ public class NeuralNetworkTest {
 		}
 		
 		//training set accuracy
+		int numOnes = 0;
+		int numZeros = 0;
+		int numOnesCorrect = 0;
+		int numZerosCorrect = 0;
 		int numCorrectTrainingSet = 0;
 		int trainingSetSize = xVectorsTraining.size();
 		for(int i=0; i<trainingSetSize; i++){
@@ -52,14 +56,24 @@ public class NeuralNetworkTest {
 			if(hypothesis >= 0.5){ //thinks state is a bomb
 				if(yVectorsTraining.get(i).get(0, 0) == 1){
 					numCorrectTrainingSet++;
+					numOnes++;
+					numOnesCorrect++;
+				} else {
+					numZeros++;
 				}
 			} else { //thinks state is not a bomb
 				if(yVectorsTraining.get(i).get(0, 0) == 0){
 					numCorrectTrainingSet++;
+					numZeros++;
+					numZerosCorrect++;
+				} else {
+					numOnes++;
 				}
 			}
 		}
 		System.out.println("Training Set\nNumber Correct: " + numCorrectTrainingSet + "\nTotal training set size: " + trainingSetSize);
+		System.out.println("Num Ones:  " + numOnes + ", Num Ones Correct:  " + numOnesCorrect);
+		System.out.println("Num Zeros: " + numZeros + ", Num Zeros Correct: " + numZerosCorrect);
 		
 		
 		
