@@ -4,7 +4,6 @@ Problem:
 			Game Board
 				2-D array with mines, can be marked as flags or questionable
 				? char array ?
-				//gayyyyyy
 				
 				Hidden v Visiblae
 				
